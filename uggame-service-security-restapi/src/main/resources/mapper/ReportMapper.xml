@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dofun.uggame.service.security.mapper.ReportMapper">
+
+    <select id="queryRecentStartGameLog" resultType="com.dofun.uggame.service.security.entity.ReportEntity">
+        select *
+        from zhw_security_report_facebook
+        where status = 0
+        <if test="param.timeInterval!=null">
+            and create_time between date_add(now(), interval - #{param.timeInterval} SECOND) and now()
+        </if>
+        order by update_time desc
+    </select>
+</mapper>

@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: uggame-service-security
+  cloud:
+    nacos:
+      #配置中心
+      config:
+        enabled: false
+        server-addr: 192.168.1.1:8848
+        namespace: 587a12c3-aace-4759-b79f-b6e7f3b152b8
+        file-extension: yml
+        # 扩展配置
+        extension-configs[0]:
+          # 主配置
+          - dataId: application.yml
+            group: DEFAULT_GROUP
+
+      #服务注册和发现
+      discovery:
+        register-enabled: false
+        server-addr: 192.168.1.1:8848
+        namespace: 587a12c3-aace-4759-b79f-b6e7f3b152b8
+
+#---------------------------------------------------feign-----------------------------------------------------
+feign:
+  circuitbreaker:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+#---------------------------------------------------ribbon----------------------------------------------------
+ribbon:
+  ServerListRefreshInterval: 1000
+  ConnectTimeout: 10000
+  ReadTimeout: 30000
+  #默认只对get请求重试，设置true时，post请求也会重试。
+  OkToRetryOnAllOperations: false
+  #是每台服务器最多重试次数，，但是首次调用不包括在内
+  MaxAutoRetries: 1
+  #是最多重试多少台服务器。
+  MaxAutoRetriesNextServer: 2
+  NFLoadBalancerRuleClassName: com.netflix.loadbalancer.AvailabilityFilteringRule
+
+
+#---------------------------------------------------hystrix----------------------------------------------------
+hystrix:
+  threadpool:
+    default:
+      coreSize: 100
+      maximumSize: 500
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 100
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 600000
+
+#---------------------------------------------------日志打印输出过滤配置-------------------------------------------------
+stdio:
+  filter:
+    # 出参日志过滤配置
+    outFilter:
+      classNames:
+        - ""
+      methods:
+        - ""
+    # 入参日志过滤配置
+    inFilter:
+      classNames:
+        - ""
+      methods:
+        - ""
+
+
+#---------------------------------------------------management-------------------------------------------------
+management:
+  security:
+    enabled: false
+  info:
+    git:
+      mode: full
+
+
+
