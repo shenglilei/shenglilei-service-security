@@ -72,3 +72,8 @@ encryption:
   key: 'df831c18fa703096'
   type: 'rc4'
 
+httpsqs:
+  ip: '161.117.249.164'
+  port: 1218
+  auth: ''
+
