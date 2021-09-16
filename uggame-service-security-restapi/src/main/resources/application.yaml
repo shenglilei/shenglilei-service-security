@@ -50,11 +50,12 @@ spring:
     timeout: 30000
     host: 161.117.249.164
     port: 6379
-    pool:
-      max-active: 1000
-      max-idle: 100
-      max-wait: -1
-      min-idle: 10
+    lettuce:
+      pool:
+        max-active: 1000
+        max-idle: 100
+        max-wait: -1
+        min-idle: 10
 
 server:
   port: 8888
