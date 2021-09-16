@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dofun.uggame.service.security.mapper.AccountMapper">
+
+    <select id="queryNeedChangePasswordGarena" resultType="com.dofun.uggame.service.security.entity.AccountEntity">
+        select *
+        from zhw_security_account_garena
+        where status = 0
+          and (order_status = 10 or
+               (order_status = 0 and order_end_time between now() and date_add(now(), interval 3600 SECOND)))
+        order by update_time desc
+    </select>
+</mapper>

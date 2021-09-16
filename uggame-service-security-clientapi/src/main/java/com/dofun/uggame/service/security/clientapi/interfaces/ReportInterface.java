@@ -10,11 +10,10 @@ import com.dofun.uggame.service.security.clientapi.pojo.response.ReportRecentFac
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(contextId = "ReportInterface", name = "uggame-service-security")
+@FeignClient(contextId = "ReportInterface", name = "${spring.application.name}")
 public interface ReportInterface {
 
     String MAPPING = "/security/report/";
@@ -25,7 +24,7 @@ public interface ReportInterface {
 
 
     @ApiOperation(value = "查询安全信息-最近通过facebook授权启动游戏的记录")
-    @GetMapping(value = MAPPING + "facebook/start-game/recent")
+    @PostMapping(value = MAPPING + "facebook/start-game/recent")
     WebApiResponse<ReportRecentFacebookStartGameResponseParam> queryRecentStartGameLog(@RequestBody @Validated ReportRecentFacebookStartGameRequestParam param);
 
     @ApiOperation(value = "上报安全信息-facebook授权设备列表退出结果")

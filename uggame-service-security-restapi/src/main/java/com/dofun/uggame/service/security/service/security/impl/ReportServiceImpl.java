@@ -1,6 +1,7 @@
 package com.dofun.uggame.service.security.service.security.impl;
 
 import com.dofun.uggame.common.util.BeanMapperUtil;
+import com.dofun.uggame.common.util.RC4Util;
 import com.dofun.uggame.framework.core.id.IdUtil;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
 import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
@@ -15,6 +16,7 @@ import com.dofun.uggame.service.security.service.security.ReportService;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +36,15 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
     @Autowired
     private IdUtil idUtil;
 
+    @Value("${encryption.key}")
+    private String encryptionKey;
+
     @Override
     public ReportFacebookStartGameResponseParam startFacebookGame(ReportFacebookStartGameRequestParam param) {
-        ReportEntity reportEntityForSelect = ReportEntity.builder().zhwOrderNo(param.getZhwOrderNo()).build();
+        ReportEntity reportEntityForSelect = ReportEntity.builder().orderId(param.getOrderId()).build();
         ReportEntity existReportEntity = reportMapper.selectOne(reportEntityForSelect);
         if (existReportEntity == null) {
-            log.info("{},不存在,新增记录。", param.getZhwOrderNo());
+            log.info("{},不存在,新增记录。", param.getOrderId());
             ReportEntity reportEntityForInsert = ReportEntity.builder().id(idUtil.next()).build();
             BeanMapperUtil.copyProperties(param, reportEntityForInsert);
             reportEntityForInsert.setUpdateTime(new Date());
@@ -49,7 +54,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
             log.info("insertResult:{}", insertResult);
             return ReportFacebookStartGameResponseParam.builder().id(reportEntityForInsert.getId()).build();
         } else {
-            log.info("{},已经存在,更新记录。", param.getZhwOrderNo());
+            log.info("{},已经存在,更新记录。", param.getOrderId());
             BeanMapperUtil.copyProperties(param, existReportEntity);
             existReportEntity.setUpdateTime(new Date());
             //不管之前的状态值，重新授权登录，就需要再次处理
@@ -72,6 +77,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         entityList.forEach(reportEntity -> {
             ReportRecentFacebookStartGameResponseParam.ReportRecentFacebookStartGameItemResponseParam item = ReportRecentFacebookStartGameResponseParam.ReportRecentFacebookStartGameItemResponseParam.builder().build();
             BeanMapperUtil.copyProperties(reportEntity, item);
+            //密文转明文
+            item.setFacebookAccount(RC4Util.decry(item.getFacebookAccount(), encryptionKey));
+            item.setFacebookPassword(RC4Util.decry(item.getFacebookPassword(), encryptionKey));
             items.add(item);
         });
         responseParam.setItem(items);

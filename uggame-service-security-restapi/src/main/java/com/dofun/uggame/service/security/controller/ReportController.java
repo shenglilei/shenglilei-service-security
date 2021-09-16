@@ -1,6 +1,5 @@
 package com.dofun.uggame.service.security.controller;
 
-import com.dofun.uggame.common.util.RC4Util;
 import com.dofun.uggame.framework.common.base.BaseResponseParam;
 import com.dofun.uggame.framework.common.response.WebApiResponse;
 import com.dofun.uggame.service.security.clientapi.interfaces.ReportInterface;
@@ -12,7 +11,6 @@ import com.dofun.uggame.service.security.clientapi.pojo.response.ReportRecentFac
 import com.dofun.uggame.service.security.service.security.ReportService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,13 +25,8 @@ public class ReportController implements ReportInterface {
     @Resource
     private ReportService reportService;
 
-    @Value("${encryption.key}")
-    private String encryptionKey;
-
     @Override
     public WebApiResponse<ReportFacebookStartGameResponseParam> startFacebookGame(@RequestBody @Validated ReportFacebookStartGameRequestParam param) {
-        param.setFacebookAccount(RC4Util.decry(param.getFacebookAccount(), encryptionKey));
-        param.setFacebookPassword(RC4Util.decry(param.getFacebookPassword(), encryptionKey));
         ReportFacebookStartGameResponseParam responseParam = reportService.startFacebookGame(param);
         return WebApiResponse.success(responseParam);
     }

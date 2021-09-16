@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "`zhw_security_report_facebook`")
+@Table(name = "`zhw_security_account_garena`")
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class ReportEntity extends BaseEntity {
+public class AccountEntity extends BaseEntity {
     /**
      * 主键
      */
@@ -28,24 +28,39 @@ public class ReportEntity extends BaseEntity {
     private Long orderId;
 
     /**
-     * Facebook 账号
+     * 订单状态
      */
-    private String facebookAccount;
+    private Integer orderStatus;
 
     /**
-     * Facebook 密码
+     * 订单开始时间
      */
-    private String facebookPassword;
+    private Date orderStartTime;
 
     /**
-     * 最后一次启动游戏的设备信息
+     * 订单结束时间
      */
-    private String lastDeviceInfo;
+    private Date orderEndTime;
 
     /**
-     * 最后一次启动游戏时间
+     * 货架Id（号主的某个游戏账号Id）
      */
-    private Date lastStartGameTime;
+    private Integer hId;
+
+    /**
+     * Garena 账号
+     */
+    private String garenaAccount;
+
+    /**
+     * Garena 密码
+     */
+    private String garenaPassword;
+
+    /**
+     * Garena 令牌
+     */
+    private String garenaKey;
 
     /**
      * 状态：0=待处理；1=成功处理；2=处理失败

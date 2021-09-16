@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "最近通过facebook授权启动游戏的记录-查询安全信息-响应参数对象")
 @Data
-@ToString
 @Builder
 public class ReportRecentFacebookStartGameResponseParam extends BaseResponseParam {
     @ApiModelProperty(value = "详细记录信息")
@@ -22,14 +20,13 @@ public class ReportRecentFacebookStartGameResponseParam extends BaseResponsePara
 
     @ApiModel(description = "最近通过facebook授权启动游戏的记录-查询安全信息-响应参数对象")
     @Data
-    @ToString
     @Builder
     public static class ReportRecentFacebookStartGameItemResponseParam {
         @ApiModelProperty(value = "上报记录Id")
         private Long id;
 
-        @ApiModelProperty(value = "订单编码(租号玩)")
-        private String zhwOrderNo;
+        @ApiModelProperty(value = "订单Id(租号玩)")
+        private Long orderId;
 
         /**
          * Facebook 账号
