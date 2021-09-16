@@ -64,7 +64,7 @@ swagger:
   apiInfo:
     title: '安全服务'
     name: 'Steven Cheng'
-    description: '账号管理服务description'
+    description: '安全服务'
     email: 'stevencheng@dofun.cn'
     version: 'v1.0.0'
 
