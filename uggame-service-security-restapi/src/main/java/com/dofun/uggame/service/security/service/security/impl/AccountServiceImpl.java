@@ -52,11 +52,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
 
     @Override
     public void receiveGarenaChangePassword(AccountReceiveGarenaChangePasswordRequestParam param) {
-        //密文转明文
-        param.setGarenaPassword(RC4Util.decry(param.getGarenaPassword(), encryptionKey));
-        param.setGarenaAccount(RC4Util.decry(param.getGarenaAccount(), encryptionKey));
-        param.setGarenaKey(RC4Util.decry(param.getGarenaKey(), encryptionKey));
-
         AccountEntity accountEntityForSelect = AccountEntity.builder().orderId(param.getOrderId()).build();
         AccountEntity existAccountEntity = accountMapper.selectOne(accountEntityForSelect);
         if (existAccountEntity == null) {
@@ -114,6 +109,10 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
         entityList.forEach(accountEntity -> {
             AccountQueryGarenaChangePasswordListResponseParam.AccountQueryGarenaChangePasswordItemResponseParam item = AccountQueryGarenaChangePasswordListResponseParam.AccountQueryGarenaChangePasswordItemResponseParam.builder().build();
             BeanMapperUtil.copyProperties(accountEntity, item);
+            //密文转明文
+            item.setGarenaPassword(RC4Util.decry(item.getGarenaPassword(), encryptionKey));
+            item.setGarenaAccount(RC4Util.decry(item.getGarenaAccount(), encryptionKey));
+            item.setGarenaKey(RC4Util.decry(item.getGarenaKey(), encryptionKey));
             items.add(item);
         });
         responseParam.setItem(items);

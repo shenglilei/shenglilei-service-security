@@ -8,8 +8,8 @@ public class RC4Test {
     public static void main(String[] args) {
         String encryptData = "7D2AEAB5B02986077414";
         String key = "df831c18fa703096";
-        String plainData = "test123654";
-        log.info("{},{}", RC4Util.decry(encryptData, key), plainData);
+        String plainData = "VTO6UFLR7N3O7M2T";
+//        log.info("{},{}", RC4Util.decry(encryptData, key), plainData);
         log.info("{},{}", encryptData, RC4Util.encrypt(plainData, key));
     }
 }
