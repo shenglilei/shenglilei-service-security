@@ -31,7 +31,7 @@ public class QueueMessageReceiver {
     @Value("${httpsqs.auth}")
     private String auth;
 
-    @Scheduled(fixedDelay = 500)
+//    @Scheduled(fixedDelay = 500)
     public void orderNeedChangeGarenaPassword() {
         AccountReceiveGarenaChangePasswordRequestParam param = HttpSQSUtil.get(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_JAVA_ORDER_NEED_CHANGE_GARENA_PASSWORD, AccountReceiveGarenaChangePasswordRequestParam.class);
         if (param != null) {
