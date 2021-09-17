@@ -34,14 +34,14 @@ public class AccountReceiveGarenaChangePasswordRequestParam extends BaseRequestP
     private Integer haoId;
 
     @ApiModelProperty(value = "Garena 账号")
-    @NotEmpty(message = "货架Id:不能为空")
+    @NotEmpty(message = "Garena 账号:不能为空")
     private String garenaAccount;
 
     @ApiModelProperty(value = "Garena 密码")
-    @NotEmpty(message = "货架Id:不能为空")
+    @NotEmpty(message = "Garena 密码:不能为空")
     private String garenaPassword;
 
     @ApiModelProperty(value = "Garena 令牌")
-    @NotEmpty(message = "货架Id:不能为空")
+    @NotEmpty(message = "Garena 令牌:不能为空")
     private String garenaKey;
 }

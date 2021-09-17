@@ -31,6 +31,9 @@ public class AccountController implements AccountInterface {
 
     @Override
     public WebApiResponse<BaseResponseParam> submitResultForGarenaPasswordChange(@RequestBody @Validated AccountSubmitResultForGarenaPasswordChangeRequestParam param) {
+        if(!(param.getStatus()==10||param.getStatus()==20)){
+            throw new IllegalArgumentException("状态不正确:[10、20]");
+        }
         accountService.submitResultForGarenaPasswordChange(param);
         return WebApiResponse.success(BaseResponseParam.empty());
     }
