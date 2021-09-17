@@ -14,7 +14,7 @@ import java.util.Date;
 @ApiModel(description = "facebook授权启动游戏-上报安全信息-请求参数对象")
 @Data
 public class ReportFacebookStartGameRequestParam extends BaseRequestParam {
-    @ApiModelProperty(value = "订单编码(租号玩)")
+    @ApiModelProperty(value = "订单Id(租号玩)")
     @NotNull(message = "订单Id(租号玩):不能为空")
     private Long orderId;
 
