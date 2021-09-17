@@ -17,7 +17,7 @@ public class AccountSubmitResultForGarenaPasswordChangeRequestParam extends Base
     @ApiModelProperty(value = "货架Id（号主的某个游戏账号Id）")
     @NotNull(message = "货架Id:不能为空")
     @Range(message = "货架Id需要大于零", min = 1)
-    private Integer hId;
+    private Integer haoId;
 
     @ApiModelProperty(value = "状态：1=成功处理；2=处理失败")
     @NotNull(message = "状态:不能为空")

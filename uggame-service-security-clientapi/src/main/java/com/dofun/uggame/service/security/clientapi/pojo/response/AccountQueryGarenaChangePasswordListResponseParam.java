@@ -23,7 +23,7 @@ public class AccountQueryGarenaChangePasswordListResponseParam extends BaseRespo
     public static class AccountQueryGarenaChangePasswordItemResponseParam {
 
         @ApiModelProperty(value = "货架Id（号主的某个游戏账号Id）")
-        private Integer hId;
+        private Integer haoId;
 
         @ApiModelProperty(value = "Garena 账号")
         private String garenaAccount;

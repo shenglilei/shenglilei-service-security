@@ -7,7 +7,7 @@
         from zhw_security_report_facebook
         where status = 0
         <if test="param.timeInterval!=null">
-            <![CDATA[ and create_time > date_add(now(), interval - #{param.timeInterval} SECOND) ]]>
+            <![CDATA[ and last_start_game_time < date_add(now(), interval - #{param.timeInterval} SECOND) ]]>
         </if>
         order by update_time desc
     </select>

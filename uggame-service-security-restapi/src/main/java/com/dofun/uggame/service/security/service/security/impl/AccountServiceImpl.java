@@ -66,7 +66,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             accountEntityForInsert.setUpdateTime(new Date());
             accountEntityForInsert.setCreateTime(new Date());
             accountEntityForInsert.setStatus(StatusEnum.WAIT.getCode());
-            int insertResult = accountMapper.insertSelective(accountEntityForInsert);
+            int insertResult = accountMapper.insert(accountEntityForInsert);
             log.info("insertResult:{}", insertResult);
         } else {
             log.info("{},已经存在,更新记录。", param.getOrderId());
@@ -88,7 +88,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                     //明文转密文
                     .garenaPassword(RC4Util.encrypt(param.getGarenaPassword(), encryptionKey)).build();
             Example where = Example.builder(AccountEntity.class).build();
-            where.createCriteria().andEqualTo("h_id", param.getHId());
+            where.createCriteria().andEqualTo("hao_id", param.getHaoId());
             int updateResult = accountMapper.updateByExampleSelective(values, where);
             log.info("updateResult:{}", updateResult);
         }

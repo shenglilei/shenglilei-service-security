@@ -31,7 +31,7 @@ public class AccountReceiveGarenaChangePasswordRequestParam extends BaseRequestP
 
     @ApiModelProperty(value = "货架Id（号主的某个游戏账号Id）")
     @NotNull(message = "货架Id:不能为空")
-    private Integer hId;
+    private Integer haoId;
 
     @ApiModelProperty(value = "Garena 账号")
     @NotEmpty(message = "货架Id:不能为空")

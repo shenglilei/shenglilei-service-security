@@ -45,7 +45,7 @@ public class AccountEntity extends BaseEntity {
     /**
      * 货架Id（号主的某个游戏账号Id）
      */
-    private Integer hId;
+    private Integer haoId;
 
     /**
      * Garena 账号
