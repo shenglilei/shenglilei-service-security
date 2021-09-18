@@ -3,12 +3,17 @@ package com.dofun.uggame.service.security.service.security.impl;
 import com.dofun.uggame.common.util.BeanMapperUtil;
 import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RC4Util;
+import com.dofun.uggame.framework.common.error.impl.CommonError;
+import com.dofun.uggame.framework.common.exception.BusinessException;
 import com.dofun.uggame.framework.core.id.IdUtil;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
+import com.dofun.uggame.framework.redis.service.RedisService;
 import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
+import com.dofun.uggame.service.security.clientapi.pojo.request.AccountLoginForGarenaChangePasswordRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountQueryGarenaChangePasswordListRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountReceiveGarenaChangePasswordRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChangeRequestParam;
+import com.dofun.uggame.service.security.clientapi.pojo.response.AccountLoginForGarenaChangePasswordResponseParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.AccountQueryGarenaChangePasswordListResponseParam;
 import com.dofun.uggame.service.security.constants.HttPSQSConstants;
 import com.dofun.uggame.service.security.entity.AccountEntity;
@@ -16,6 +21,7 @@ import com.dofun.uggame.service.security.mapper.AccountMapper;
 import com.dofun.uggame.service.security.service.security.AccountService;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,23 +38,70 @@ import java.util.Objects;
 @Transactional(rollbackFor = RuntimeException.class)
 public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMapper> implements AccountService {
 
+    private static final String usernameKey = "uggame:auth:token:garena:change:password:clientType:";
+    private static final String tokenKey = "uggame:auth:token:garena:change:password:token:";
     @Autowired
     private AccountMapper accountMapper;
-
     @Autowired
     private IdUtil idUtil;
-
+    @Autowired
+    private RedisService redisService;
     @Value("${httpsqs.ip}")
     private String ip;
-
     @Value("${httpsqs.port}")
     private Integer port;
-
     @Value("${httpsqs.auth}")
     private String auth;
-
     @Value("${encryption.key}")
     private String encryptionKey;
+    @Value("${client.type}")
+    private String clientType;
+    @Value("${client.auth.username}")
+    private String authUsername;
+    @Value("${client.auth.password}")
+    private String authPassword;
+    @Value("${client.auth.ticketTime}")
+    private Long ticketTime;
+
+    @Override
+    public AccountLoginForGarenaChangePasswordResponseParam loginForChangePasswordGarena(AccountLoginForGarenaChangePasswordRequestParam param) {
+        if (!param.getClientType().equals(clientType)) {
+            throw new IllegalArgumentException("终端类型不正确");
+        }
+        if (!param.getPassword().equals(authPassword) || !param.getUsername().equals(authUsername)) {
+            throw new IllegalArgumentException("账号或密码不正确");
+        }
+        String myUsernameKey = usernameKey + param.getClientType() + ":" + "username:" + param.getUsername();
+        String accessToken = redisService.get(myUsernameKey);
+        if (accessToken == null) {
+            accessToken = DigestUtils.md5Hex(String.valueOf(idUtil.next()));
+            String myTokenKey = tokenKey + accessToken;
+            redisService.set(myUsernameKey, accessToken, ticketTime);
+            redisService.set(myTokenKey, param, ticketTime);
+        } else {
+            String myTokenKey = tokenKey + accessToken;
+            if (redisService.get(myTokenKey) == null) {
+                log.info("数据不一致:{},{}", param, accessToken);
+                redisService.delete(myUsernameKey);
+                return loginForChangePasswordGarena(param);
+            }
+            redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + ticketTime));
+            redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + ticketTime));
+        }
+        return AccountLoginForGarenaChangePasswordResponseParam.builder().accessToken(accessToken).expireAt(new Date(System.currentTimeMillis() + ticketTime)).build();
+    }
+
+    @Override
+    public void checkAccessToken(String accessToken) {
+        if (accessToken == null || accessToken.isEmpty()) {
+            throw new BusinessException(CommonError.PARAMETER_ERROR);
+        }
+        String myTokenKey = tokenKey + accessToken;
+        if (redisService.get(myTokenKey) == null) {
+            throw new BusinessException(CommonError.UNAUTHORIZED);
+        }
+        redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + ticketTime));
+    }
 
     @Override
     public void receiveGarenaChangePassword(AccountReceiveGarenaChangePasswordRequestParam param) {

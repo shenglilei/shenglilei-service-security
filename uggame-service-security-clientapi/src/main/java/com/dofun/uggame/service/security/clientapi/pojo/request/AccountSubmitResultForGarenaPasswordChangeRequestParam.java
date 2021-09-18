@@ -8,12 +8,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "账号服务-提交garena密码的修改结果-请求参数对象")
 @Data
 public class AccountSubmitResultForGarenaPasswordChangeRequestParam extends BaseRequestParam {
+    @ApiModelProperty(value = "访问令牌")
+    @NotEmpty(message = "访问令牌:不能为空")
+    private String accessToken;
+
     @ApiModelProperty(value = "货架Id（号主的某个游戏账号Id）")
     @NotNull(message = "货架Id:不能为空")
     @Range(message = "货架Id需要大于零", min = 1)
