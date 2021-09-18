@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @Api(tags = "上报安全信息")
 @RestController
@@ -27,6 +28,8 @@ public class ReportController implements ReportInterface {
 
     @Override
     public WebApiResponse<ReportFacebookStartGameResponseParam> startFacebookGame(@RequestBody @Validated ReportFacebookStartGameRequestParam param) {
+        //强制设置为当前时间
+        param.setLastStartGameTime(new Date());
         ReportFacebookStartGameResponseParam responseParam = reportService.startFacebookGame(param);
         return WebApiResponse.success(responseParam);
     }
