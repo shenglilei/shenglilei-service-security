@@ -76,3 +76,10 @@ httpsqs:
   port: 1218
   auth: ''
 
+client:
+  type: 'garenaPasswordAgent'
+  auth:
+    #username 唯一
+    username: 'test'
+    password: '123456'
+
