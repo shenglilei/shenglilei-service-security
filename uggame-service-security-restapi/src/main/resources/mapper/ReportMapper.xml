@@ -6,9 +6,9 @@
         select *
         from zhw_security_report_facebook
         where status = 0
-        <if test="param.timeInterval!=null">
-            <![CDATA[ and last_start_game_time < date_add(now(), interval - #{param.timeInterval} SECOND) ]]>
-        </if>
+<!--        <if test="param.timeInterval!=null">-->
+<!--            <![CDATA[ and last_start_game_time < date_add(now(), interval - #{param.timeInterval} SECOND) ]]>-->
+<!--        </if>-->
         order by update_time desc
     </select>
 </mapper>

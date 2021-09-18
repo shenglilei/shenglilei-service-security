@@ -42,6 +42,9 @@ public class ReportController implements ReportInterface {
 
     @Override
     public WebApiResponse<BaseResponseParam> quitFacebookAccount(@RequestBody @Validated ReportQuitFacebookAccountRequestParam param) {
+        if (!(param.getStatus() == 10 || param.getStatus() == 20)) {
+            throw new IllegalArgumentException("状态不正确:[10、20]");
+        }
         reportService.quitFacebookAccount(param);
         return WebApiResponse.success(BaseResponseParam.empty());
     }
