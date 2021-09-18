@@ -18,8 +18,8 @@ public class ReportQuitFacebookAccountRequestParam extends BaseRequestParam {
     @NotNull(message = "上报记录Id:不能为空")
     private Long id;
 
-    @ApiModelProperty(value = "状态：1=成功处理；2=处理失败")
+    @ApiModelProperty(value = "状态：10=成功处理；20=处理失败")
     @NotNull(message = "状态:不能为空")
-    @Range(message = "状态：1=成功处理；2=处理失败", min = 1, max = 2)
+    @Range(message = "状态：10=成功处理；20=处理失败", min = 10, max = 20)
     private Integer status = StatusEnum.SUCCESS.getCode();
 }
