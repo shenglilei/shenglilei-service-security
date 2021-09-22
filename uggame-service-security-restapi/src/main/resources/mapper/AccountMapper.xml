@@ -8,6 +8,6 @@
         WHERE STATUS = 0
           AND (order_status = 10 OR
                (order_status = 0 AND (order_end_time BETWEEN date_add(now(), INTERVAL - 300 SECOND) AND now())))
-        ORDER BY update_time DESC
+        GROUP BY garena_account,update_time DESC
     </select>
 </mapper>
