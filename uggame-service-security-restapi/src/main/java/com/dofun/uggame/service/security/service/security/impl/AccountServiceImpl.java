@@ -141,6 +141,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             log.info("updateResult:{}", updateResult);
         }
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
+            //明文转密文
+            param.setGarenaPassword(RC4Util.encrypt(param.getGarenaPassword(), encryptionKey));
             sendHTTPSQSMessage(param);
         }
     }
