@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(contextId = "AccountInterface", name = "${spring.application.name}")
 public interface AccountInterface {
 
-    String MAPPING = Constants.BASEURL + "/security/account/";
+    String MAPPING = Constants.BASEURL + "security/account/";
 
     @ApiOperation(value = "账号服务-登录")
     @PostMapping(value = MAPPING + "garena/password/change/login")
