@@ -1,5 +1,6 @@
 package com.dofun.uggame.service.security.service.security.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.dofun.uggame.common.util.BeanMapperUtil;
 import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RC4Util;
@@ -9,10 +10,7 @@ import com.dofun.uggame.framework.core.id.IdUtil;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
 import com.dofun.uggame.framework.redis.service.RedisService;
 import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountLoginForGarenaChangePasswordRequestParam;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountQueryGarenaChangePasswordListRequestParam;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountReceiveGarenaChangePasswordRequestParam;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChangeRequestParam;
+import com.dofun.uggame.service.security.clientapi.pojo.request.*;
 import com.dofun.uggame.service.security.clientapi.pojo.response.AccountLoginForGarenaChangePasswordResponseParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.AccountQueryGarenaChangePasswordListResponseParam;
 import com.dofun.uggame.service.security.constants.HttPSQSConstants;
@@ -85,8 +83,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                 redisService.delete(myUsernameKey);
                 return loginForChangePasswordGarena(param);
             }
-            redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime*1000)));
-            redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + (ticketTime*1000)));
+            redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
+            redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
         }
         return AccountLoginForGarenaChangePasswordResponseParam.builder().accessToken(accessToken).expireAt(new Date(System.currentTimeMillis() + ticketTime)).build();
     }
@@ -131,15 +129,15 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     public void submitResultForGarenaPasswordChange(AccountSubmitResultForGarenaPasswordChangeRequestParam param) {
         //只有待处理以及处理失败的，才需要更新状态
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode()) || Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode())) {
-            if(Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())){
-                if(param.getGarenaPassword()==null||param.getGarenaPassword().isEmpty()){
+            if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
+                if (param.getGarenaPassword() == null || param.getGarenaPassword().isEmpty()) {
                     throw new IllegalArgumentException("新密码不可以为空");
                 }
             }
             AccountEntity values = AccountEntity.builder()
                     .status(param.getStatus())
                     //明文转密文
-                    .garenaPassword(Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode())?null:RC4Util.encrypt(param.getGarenaPassword(), encryptionKey))
+                    .garenaPassword(Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode()) ? null : RC4Util.encrypt(param.getGarenaPassword(), encryptionKey))
                     .updateTime(new Date())
                     .build();
             Example where = Example.builder(AccountEntity.class).build();
@@ -157,8 +155,10 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     }
 
     private void sendHTTPSQSMessage(AccountSubmitResultForGarenaPasswordChangeRequestParam param) {
-        log.info("开始发送HTTPSQS消息");
-        HttpSQSUtil.put(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_PHP_GARENA_PASSWORD_CHANGE_SUCCESS, param.toString());
+        AccountSubmitResultForGarenaPasswordChange2PHPRequestParam phpRequestParam = new AccountSubmitResultForGarenaPasswordChange2PHPRequestParam();
+        BeanMapperUtil.copyProperties(param, phpRequestParam);
+        log.info("开始发送HTTPSQS消息:{}", JSON.toJSONString(phpRequestParam));
+        HttpSQSUtil.put(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_PHP_GARENA_PASSWORD_CHANGE_SUCCESS, phpRequestParam.toString());
     }
 
     @Override
