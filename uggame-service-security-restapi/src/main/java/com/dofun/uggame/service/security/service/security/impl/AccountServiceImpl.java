@@ -164,8 +164,6 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             BeanMapperUtil.copyProperties(accountEntity, item);
             //密文转明文
             item.setGarenaPassword(RC4Util.decry(item.getGarenaPassword(), encryptionKey));
-            item.setGarenaAccount(RC4Util.decry(item.getGarenaAccount(), encryptionKey));
-            item.setGarenaKey(RC4Util.decry(item.getGarenaKey(), encryptionKey));
             items.add(item);
         });
         responseParam.setItem(items);
