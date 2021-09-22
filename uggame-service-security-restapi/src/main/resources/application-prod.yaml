@@ -1,10 +1,11 @@
 spring:
   #---------------------------------------------------datasource---------------------------------------------
   datasource:
-    ip: 10.0.65.70
+    ip: rm-t4nzvt45h12zoy285.mysql.singapore.rds.aliyuncs.com
     port: 3306
-    username: uggame
-    password: Rzs5yHw3CDsxzFY4
+    username: uggameen
+    database: uggameen
+    password: qaQ2ojYNyt1ktN5w
 
 
   #---------------------------------------------------redis--------------------------------------------------
