@@ -18,5 +18,5 @@ public interface AccountService extends BaseService<AccountEntity> {
 
     AccountLoginForGarenaChangePasswordResponseParam loginForChangePasswordGarena(AccountLoginForGarenaChangePasswordRequestParam param);
 
-    public void checkAccessToken(String accessToken);
+    void checkAccessToken(String accessToken);
 }

@@ -131,12 +131,20 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     public void submitResultForGarenaPasswordChange(AccountSubmitResultForGarenaPasswordChangeRequestParam param) {
         //只有待处理以及处理失败的，才需要更新状态
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode()) || Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode())) {
+            if(Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())){
+                if(param.getGarenaPassword()==null||param.getGarenaPassword().isEmpty()){
+                    throw new IllegalArgumentException("新密码不可以为空");
+                }
+            }
             AccountEntity values = AccountEntity.builder()
                     .status(param.getStatus())
                     //明文转密文
-                    .garenaPassword(RC4Util.encrypt(param.getGarenaPassword(), encryptionKey)).build();
+                    .garenaPassword(Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode())?null:RC4Util.encrypt(param.getGarenaPassword(), encryptionKey))
+                    .build();
             Example where = Example.builder(AccountEntity.class).build();
-            where.createCriteria().andEqualTo("hao_id", param.getHaoId());
+            where.createCriteria()
+                    .andEqualTo("hao_id", param.getHaoId())
+                    .andEqualTo("status", StatusEnum.WAIT.getCode());
             int updateResult = accountMapper.updateByExampleSelective(values, where);
             log.info("updateResult:{}", updateResult);
         }
