@@ -3,11 +3,14 @@
 <mapper namespace="com.dofun.uggame.service.security.mapper.AccountMapper">
 
     <select id="queryNeedChangePasswordGarena" resultType="com.dofun.uggame.service.security.entity.AccountEntity">
-        select *
-        from zhw_security_account_garena
-        where status = 0
-          and (order_status = 10 or
-               (order_status = 0 and order_end_time between now() and date_add(now(), interval 3600 SECOND)))
-        order by update_time desc
+        SELECT
+            *
+        FROM
+            zhw_security_account_garena
+        WHERE
+            STATUS = 0
+          AND ( order_status = 10 OR ( order_status = 0 AND ( order_end_time BETWEEN date_add( now(), INTERVAL - 300 SECOND ) AND now() ) ) )
+        ORDER BY
+            update_time DESC
     </select>
 </mapper>
