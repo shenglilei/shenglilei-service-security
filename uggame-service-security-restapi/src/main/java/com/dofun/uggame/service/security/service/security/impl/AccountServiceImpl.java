@@ -85,8 +85,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                 redisService.delete(myUsernameKey);
                 return loginForChangePasswordGarena(param);
             }
-            redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + ticketTime));
-            redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + ticketTime));
+            redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime*1000)));
+            redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + (ticketTime*1000)));
         }
         return AccountLoginForGarenaChangePasswordResponseParam.builder().accessToken(accessToken).expireAt(new Date(System.currentTimeMillis() + ticketTime)).build();
     }
