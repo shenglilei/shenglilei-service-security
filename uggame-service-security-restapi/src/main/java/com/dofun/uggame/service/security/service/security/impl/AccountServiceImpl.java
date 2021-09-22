@@ -140,10 +140,11 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                     .status(param.getStatus())
                     //明文转密文
                     .garenaPassword(Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode())?null:RC4Util.encrypt(param.getGarenaPassword(), encryptionKey))
+                    .updateTime(new Date())
                     .build();
             Example where = Example.builder(AccountEntity.class).build();
             where.createCriteria()
-                    .andEqualTo("hao_id", param.getHaoId())
+                    .andEqualTo("haoId", param.getHaoId())
                     .andEqualTo("status", StatusEnum.WAIT.getCode());
             int updateResult = accountMapper.updateByExampleSelective(values, where);
             log.info("updateResult:{}", updateResult);
