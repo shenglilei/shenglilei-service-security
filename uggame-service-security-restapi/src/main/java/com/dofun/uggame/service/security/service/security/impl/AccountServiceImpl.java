@@ -161,7 +161,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
         AccountSubmitResultForGarenaPasswordChange2PHPRequestParam phpRequestParam = new AccountSubmitResultForGarenaPasswordChange2PHPRequestParam();
         BeanMapperUtil.copyProperties(param, phpRequestParam);
         log.info("开始发送HTTPSQS消息:{}", JSON.toJSONString(phpRequestParam));
-        HttpSQSUtil.put(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_PHP_GARENA_PASSWORD_CHANGE_SUCCESS, phpRequestParam.toString());
+        HttpSQSUtil.put(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_PHP_GARENA_PASSWORD_CHANGE_SUCCESS, JSON.toJSONString(phpRequestParam));
     }
 
     @Override
