@@ -43,7 +43,7 @@ public class AccountEntity extends BaseEntity {
     private Date orderEndTime;
 
     /**
-     * 货架Id（号主的某个游戏账号Id）
+     * 货架Id
      */
     private Integer haoId;
 

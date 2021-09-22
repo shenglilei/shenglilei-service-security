@@ -29,7 +29,7 @@ public class AccountReceiveGarenaChangePasswordRequestParam extends BaseRequestP
     @NotNull(message = "订单结束时间:不能为空")
     private Date orderEndTime;
 
-    @ApiModelProperty(value = "货架Id（号主的某个游戏账号Id）")
+    @ApiModelProperty(value = "货架Id")
     @NotNull(message = "货架Id:不能为空")
     private Integer haoId;
 
