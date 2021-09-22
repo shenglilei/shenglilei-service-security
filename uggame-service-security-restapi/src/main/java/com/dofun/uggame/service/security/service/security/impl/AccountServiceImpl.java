@@ -145,7 +145,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                     .build();
             Example where = Example.builder(AccountEntity.class).build();
             where.createCriteria()
-                    .andEqualTo("haoId", param.getHaoId())
+                    .andEqualTo("garenaAccount", param.getGarenaAccount())
                     .andEqualTo("status", StatusEnum.WAIT.getCode());
             int updateResult = accountMapper.updateByExampleSelective(values, where);
             log.info("updateResult:{}", updateResult);
