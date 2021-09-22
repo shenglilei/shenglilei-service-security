@@ -95,10 +95,13 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             throw new BusinessException(CommonError.PARAMETER_ERROR);
         }
         String myTokenKey = tokenKey + accessToken;
-        if (redisService.get(myTokenKey) == null) {
+        AccountLoginForGarenaChangePasswordRequestParam param=redisService.getObject(myTokenKey,AccountLoginForGarenaChangePasswordRequestParam.class);
+        if (param == null) {
             throw new BusinessException(CommonError.UNAUTHORIZED);
         }
-        redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + ticketTime));
+        String myUsernameKey = usernameKey + param.getClientType() + ":" + "username:" + param.getUsername();
+        redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
+        redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
     }
 
     @Override
