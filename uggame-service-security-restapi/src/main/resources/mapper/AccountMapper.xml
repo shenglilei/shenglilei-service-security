@@ -18,7 +18,7 @@
                         OR (
                                         order_status = 0
                                     AND (
-                                            order_end_time BETWEEN date_add( now(), INTERVAL - 300 SECOND )
+                                            order_end_time BETWEEN date_add( now(), INTERVAL - 600 SECOND )
                                                 AND now())))
                 ORDER BY
                     create_time DESC
