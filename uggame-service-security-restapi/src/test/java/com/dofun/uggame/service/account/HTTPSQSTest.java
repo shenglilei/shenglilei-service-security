@@ -27,8 +27,8 @@ public class HTTPSQSTest {
     public static void main(String[] args) {
 //        Message message1 = HttpSQSUtil.get(ip, port, auth, topicName, Message.class);
 //        log.info("message after:{}", JSON.toJSONString(message1));
-        send2php();
-//        send2java();
+//        send2php();
+        send2java();
     }
 
     private static void send2php() {
@@ -48,9 +48,12 @@ public class HTTPSQSTest {
         param.setGarenaPassword(RandomUtil.getMixed(16));
         param.setHaoId(RandomUtil.getInt(10000000));
         param.setOrderId((long) RandomUtil.getInt(10000000));
-        param.setOrderEndTime(System.currentTimeMillis() + (long) RandomUtil.getInt(10000000));
-        param.setOrderStartTime(System.currentTimeMillis() - (long) RandomUtil.getInt(100000));
-        param.setOrderStatus(RandomUtils.nextBoolean() ? OrderStatusEnum.NORMAL.getCode() : OrderStatusEnum.CANCEL_USER.getCode());
+//        param.setOrderEndTime(System.currentTimeMillis() + (long) RandomUtil.getInt(10000000));
+        param.setOrderEndTime(1632368831000L);
+//        param.setOrderStartTime(System.currentTimeMillis() - (long) RandomUtil.getInt(100000));
+        param.setOrderStartTime(1632364931000L);
+//        param.setOrderStatus(RandomUtils.nextBoolean() ? OrderStatusEnum.NORMAL.getCode() : OrderStatusEnum.CANCEL_USER.getCode());
+        param.setOrderStatus(OrderStatusEnum.NORMAL.getCode());
         log.info("message before:{}", JSON.toJSONString(param));
         HttpSQSUtil.put(ip, port, auth, topicName, JSON.toJSONString(param));
     }

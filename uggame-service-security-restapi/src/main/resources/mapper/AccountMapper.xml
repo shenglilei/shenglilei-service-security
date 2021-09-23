@@ -3,27 +3,20 @@
 <mapper namespace="com.dofun.uggame.service.security.mapper.AccountMapper">
 
     <select id="queryNeedChangePasswordGarena" resultType="com.dofun.uggame.service.security.entity.AccountEntity">
-        SELECT
-            *
-        FROM
-            (
-                SELECT
-                    *
-                FROM
-                    zhw_security_account_garena
-                WHERE
-                    STATUS = 0
-                  AND (
-                            order_status = 10
-                        OR (
-                                        order_status = 0
-                                    AND (
-                                            order_end_time BETWEEN date_add( now(), INTERVAL - 600 SECOND )
-                                                AND now())))
-                ORDER BY
-                    create_time DESC
-            ) AS t
-        GROUP BY
-            garena_account
+        SELECT *
+        FROM (
+                 SELECT *
+                 FROM zhw_security_account_garena
+                 WHERE STATUS = 0
+                   AND (
+                             order_status = 10
+                         OR (
+                                         order_status = 0
+                                     AND (
+                                             order_end_time <![CDATA[<]]> date_add(now(), INTERVAL 600 SECOND)
+                                             )))
+                 ORDER BY create_time DESC
+             ) AS t
+        GROUP BY garena_account
     </select>
 </mapper>
