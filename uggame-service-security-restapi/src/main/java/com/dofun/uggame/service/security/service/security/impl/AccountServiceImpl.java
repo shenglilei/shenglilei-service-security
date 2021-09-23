@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,7 +94,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             throw new BusinessException(CommonError.PARAMETER_ERROR);
         }
         String myTokenKey = tokenKey + accessToken;
-        AccountLoginForGarenaChangePasswordRequestParam param=redisService.getObject(myTokenKey,AccountLoginForGarenaChangePasswordRequestParam.class);
+        AccountLoginForGarenaChangePasswordRequestParam param = redisService.getObject(myTokenKey, AccountLoginForGarenaChangePasswordRequestParam.class);
         if (param == null) {
             throw new BusinessException(CommonError.UNAUTHORIZED);
         }
@@ -137,18 +136,39 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                     throw new IllegalArgumentException("新密码不可以为空");
                 }
             }
-            AccountEntity values = AccountEntity.builder()
-                    .status(param.getStatus())
-                    //明文转密文
-                    .garenaPassword(Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode()) ? null : RC4Util.encrypt(param.getGarenaPassword(), encryptionKey))
-                    .updateTime(new Date())
-                    .build();
-            Example where = Example.builder(AccountEntity.class).build();
-            where.createCriteria()
-                    .andEqualTo("garenaAccount", param.getGarenaAccount())
-                    .andEqualTo("status", StatusEnum.WAIT.getCode());
-            int updateResult = accountMapper.updateByExampleSelective(values, where);
+            AccountEntity accountEntityForSelect = AccountEntity.builder().orderId(param.getOrderId()).build();
+            AccountEntity existAccountEntity = accountMapper.selectOne(accountEntityForSelect);
+            if (existAccountEntity == null) {
+                log.info("{},不存在。", param.getOrderId());
+                throw new IllegalArgumentException("orderId不存在");
+            }
+            //不是待处理状态的就跳过
+            if (!existAccountEntity.getStatus().equals(StatusEnum.WAIT.getCode())) {
+                log.info("{},状态:{},不需要重复处理.", param.getOrderId(), existAccountEntity.getStatus());
+                return;
+            }
+            if (!existAccountEntity.getGarenaAccount().equals(param.getGarenaAccount())) {
+                log.info("账号信息不一致,数据库:{},入参:{},", existAccountEntity.getGarenaAccount(), param.getGarenaAccount());
+                throw new IllegalArgumentException("orderId不存在");
+            }
+            if (!existAccountEntity.getHaoId().equals(param.getHaoId())) {
+                log.info("货架Id不一致,数据库:{},入参:{},", existAccountEntity.getHaoId(), param.getHaoId());
+                throw new IllegalArgumentException("orderId不存在");
+            }
+            if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
+                log.info("数据Id:{},订单号:{},货架Id:{},状态:{},旧密码:{},新密码:{}", existAccountEntity.getId(), param.getOrderId(), param.getHaoId(), param.getStatus(), RC4Util.decry(existAccountEntity.getGarenaPassword(), encryptionKey), param.getGarenaPassword());
+            }
+            BeanMapperUtil.copyProperties(param, existAccountEntity);
+            //明文转密文
+            existAccountEntity.setGarenaPassword(Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode()) ? null : RC4Util.encrypt(param.getGarenaPassword(), encryptionKey));
+            existAccountEntity.setUpdateTime(new Date());
+            int updateResult = accountMapper.updateByPrimaryKeySelective(existAccountEntity);
             log.info("updateResult:{}", updateResult);
+            if (updateResult > 0) {
+                log.info("改密成功.");
+            } else {
+                log.error("改密失败.");
+            }
         }
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
             //明文转密文

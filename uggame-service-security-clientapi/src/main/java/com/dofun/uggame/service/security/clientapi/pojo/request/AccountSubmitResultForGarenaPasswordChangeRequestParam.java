@@ -19,6 +19,11 @@ public class AccountSubmitResultForGarenaPasswordChangeRequestParam extends Base
     @NotEmpty(message = "访问令牌:不能为空")
     private String accessToken;
 
+    @ApiModelProperty(value = "订单Id(租号玩)")
+    @NotNull(message = "订单Id(租号玩):不能为空")
+    @Range(message = "订单Id无效", min = 1)
+    private Long orderId;
+
     @ApiModelProperty(value = "货架Id")
     @NotNull(message = "货架Id:不能为空")
     @Range(message = "货架Id需要大于零", min = 1)
