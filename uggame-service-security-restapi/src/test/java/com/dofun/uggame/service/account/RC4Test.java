@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RC4Test {
     public static void main(String[] args) {
-        String encryptData = "7D2AEAB5B02986077414";
+        String encryptData = "6B26A9F2B5238606";
         String key = "df831c18fa703096";
-        String plainData = "zhw123456";
-        log.info("{},{}", RC4Util.decry("5C08A0F1B42B870571", key), plainData);
+        String plainData = "pz904514";
+        log.info("{},{}", RC4Util.decry(encryptData, key), plainData);
         log.info("{},{}", encryptData, RC4Util.encrypt(plainData, key));
     }
 }

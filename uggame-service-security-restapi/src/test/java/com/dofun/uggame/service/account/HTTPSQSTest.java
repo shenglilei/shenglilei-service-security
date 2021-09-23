@@ -3,14 +3,18 @@ package com.dofun.uggame.service.account;
 import com.alibaba.fastjson.JSON;
 import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RandomUtil;
+import com.dofun.uggame.framework.common.base.BaseRequestParam;
 import com.dofun.uggame.service.security.clientapi.enums.OrderStatusEnum;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountReceiveGarenaChangePasswordRequestParam;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChangeRequestParam;
+import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChange2PHPRequestParam;
 import com.dofun.uggame.service.security.constants.HttPSQSConstants;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Slf4j
@@ -23,15 +27,15 @@ public class HTTPSQSTest {
     public static void main(String[] args) {
 //        Message message1 = HttpSQSUtil.get(ip, port, auth, topicName, Message.class);
 //        log.info("message after:{}", JSON.toJSONString(message1));
-        send2java();
+        send2php();
+//        send2java();
     }
 
     private static void send2php() {
         String topicName = HttPSQSConstants.QUEUE_DEFINE_NOTIFY_PHP_GARENA_PASSWORD_CHANGE_SUCCESS;
-        AccountSubmitResultForGarenaPasswordChangeRequestParam param = new AccountSubmitResultForGarenaPasswordChangeRequestParam();
-        param.setStatus(1);
-        param.setGarenaPassword("654321");
-        param.setHaoId(1212121212);
+        AccountSubmitResultForGarenaPasswordChange2PHPRequestParam param = new AccountSubmitResultForGarenaPasswordChange2PHPRequestParam();
+        param.setGarenaPassword("7939ABF4B2298401");
+        param.setHaoId(2616781);
         log.info("message before:{}", JSON.toJSONString(param));
         HttpSQSUtil.put(ip, port, auth, topicName, JSON.toJSONString(param));
     }
@@ -44,11 +48,48 @@ public class HTTPSQSTest {
         param.setGarenaPassword(RandomUtil.getMixed(16));
         param.setHaoId(RandomUtil.getInt(10000000));
         param.setOrderId((long) RandomUtil.getInt(10000000));
-        param.setOrderEndTime(new Date(System.currentTimeMillis() + (long) RandomUtil.getInt(10000000)));
-        param.setOrderStartTime(new Date(System.currentTimeMillis() - (long) RandomUtil.getInt(100000)));
+        param.setOrderEndTime(System.currentTimeMillis() + (long) RandomUtil.getInt(10000000));
+        param.setOrderStartTime(System.currentTimeMillis() - (long) RandomUtil.getInt(100000));
         param.setOrderStatus(RandomUtils.nextBoolean() ? OrderStatusEnum.NORMAL.getCode() : OrderStatusEnum.CANCEL_USER.getCode());
         log.info("message before:{}", JSON.toJSONString(param));
         HttpSQSUtil.put(ip, port, auth, topicName, JSON.toJSONString(param));
+    }
+
+
+    @EqualsAndHashCode(callSuper = true)
+    @ApiModel(description = "账号服务-接收需要修改garena密码的账号列表-请求参数对象")
+    @Data
+    public static class AccountReceiveGarenaChangePasswordRequestParam extends BaseRequestParam {
+        @ApiModelProperty(value = "订单Id(租号玩)")
+        @NotNull(message = "订单Id(租号玩):不能为空")
+        private Long orderId;
+
+        @ApiModelProperty(value = "订单状态")
+        @NotNull(message = "订单状态:不能为空")
+        private Integer orderStatus;
+
+        @ApiModelProperty(value = "订单开始时间")
+        private Long orderStartTime;
+
+        @ApiModelProperty(value = "订单结束时间")
+        @NotNull(message = "订单结束时间:不能为空")
+        private Long orderEndTime;
+
+        @ApiModelProperty(value = "货架Id")
+        @NotNull(message = "货架Id:不能为空")
+        private Integer haoId;
+
+        @ApiModelProperty(value = "Garena 账号")
+        @NotEmpty(message = "Garena 账号:不能为空")
+        private String garenaAccount;
+
+        @ApiModelProperty(value = "Garena 密码")
+        @NotEmpty(message = "Garena 密码:不能为空")
+        private String garenaPassword;
+
+        @ApiModelProperty(value = "Garena 令牌")
+        @NotEmpty(message = "Garena 令牌:不能为空")
+        private String garenaKey;
     }
 
     @Builder
