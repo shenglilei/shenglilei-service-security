@@ -8,20 +8,23 @@ spring:
       #配置中心
       config:
         enabled: false
-        server-addr: 192.168.1.1:8848
-        namespace: 587a12c3-aace-4759-b79f-b6e7f3b152b8
+        server-addr: https://en-test.uggame.com:443
+        namespace: 65d145e9-57a4-4aa3-b3df-f3a2436a0ddf
         file-extension: yml
         # 扩展配置
         extension-configs[0]:
           # 主配置
           - dataId: application.yml
             group: DEFAULT_GROUP
+            refresh: true
 
       #服务注册和发现
       discovery:
-        register-enabled: false
-        server-addr: 192.168.1.1:8848
-        namespace: 587a12c3-aace-4759-b79f-b6e7f3b152b8
+        register-enabled: true
+        server-addr: https://en-test.uggame.com:443
+        namespace: 65d145e9-57a4-4aa3-b3df-f3a2436a0ddf
+        username: nacos
+        password: nacos
   #---------------------------------------------------jackson-------------------------------------------------
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -71,6 +74,8 @@ feign:
       enabled: true
     response:
       enabled: true
+  sentinel:
+    enabled: true
 
 #---------------------------------------------------ribbon----------------------------------------------------
 ribbon:
@@ -87,19 +92,7 @@ ribbon:
 
 
 #---------------------------------------------------hystrix----------------------------------------------------
-hystrix:
-  threadpool:
-    default:
-      coreSize: 100
-      maximumSize: 500
-      maxQueueSize: 1000
-      queueSizeRejectionThreshold: 100
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 600000
+
 
 #---------------------------------------------------日志打印输出过滤配置-------------------------------------------------
 stdio:
@@ -120,11 +113,23 @@ stdio:
 
 #---------------------------------------------------management-------------------------------------------------
 management:
-  security:
-    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+    restart:
+      enabled: true
   info:
     git:
       mode: full
+  security:
+    enabled: false
 
 server:
   port: 8888
