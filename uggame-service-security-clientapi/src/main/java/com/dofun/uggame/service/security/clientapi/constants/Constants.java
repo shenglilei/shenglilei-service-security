@@ -7,6 +7,6 @@ package com.dofun.uggame.service.security.clientapi.constants;
  * Time:9:42
  */
 public interface Constants {
-    //    String BASEURL = "/api/v1/";
-    String BASEURL = "/";
+    String BASEURL = "/api/v1/";
+//    String BASEURL = "/";
 }
