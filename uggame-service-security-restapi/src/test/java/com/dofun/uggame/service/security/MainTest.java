@@ -1,6 +1,5 @@
-package com.dofun.uggame.service.account;
+package com.dofun.uggame.service.security;
 
-import com.dofun.uggame.service.security.ServiceSecurityApplication;
 import com.dofun.uggame.service.security.entity.ReportEntity;
 import com.dofun.uggame.service.security.service.security.ReportService;
 import com.github.pagehelper.PageInfo;

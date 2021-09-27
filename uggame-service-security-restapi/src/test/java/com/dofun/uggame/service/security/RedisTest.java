@@ -1,10 +1,9 @@
-package com.dofun.uggame.service.account;
+package com.dofun.uggame.service.security;
 
 import com.dofun.uggame.common.util.AssertUtils;
 import com.dofun.uggame.common.util.RandomUtil;
 import com.dofun.uggame.framework.redis.lock.RedisLock;
 import com.dofun.uggame.framework.redis.service.RedisService;
-import com.dofun.uggame.service.security.ServiceSecurityApplication;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

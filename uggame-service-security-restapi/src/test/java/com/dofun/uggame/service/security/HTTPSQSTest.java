@@ -1,4 +1,4 @@
-package com.dofun.uggame.service.account;
+package com.dofun.uggame.service.security;
 
 import com.alibaba.fastjson.JSON;
 import com.dofun.uggame.common.util.HttpSQSUtil;

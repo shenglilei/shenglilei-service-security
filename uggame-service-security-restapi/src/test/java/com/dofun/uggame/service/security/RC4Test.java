@@ -1,7 +1,8 @@
-package com.dofun.uggame.service.account;
+package com.dofun.uggame.service.security;
 
 import com.dofun.uggame.common.util.RC4Util;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Slf4j
 public class RC4Test {
@@ -11,5 +12,8 @@ public class RC4Test {
         String plainData = "pz904514";
         log.info("{},{}", RC4Util.decry(encryptData, key), plainData);
         log.info("{},{}", encryptData, RC4Util.encrypt(plainData, key));
+
+        log.info(new BCryptPasswordEncoder().encode("123456"));
+
     }
 }
