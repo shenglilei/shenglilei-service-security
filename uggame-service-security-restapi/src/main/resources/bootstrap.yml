@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: uggame-service-security
+  profiles:
+    #需要使用的环境，[开发环境（本机）=dev,测试环境=test,生产环境=prod]
+    active: dev
+
+
+
+#-----------------------------------------该部分文件内容【spring:cloud:nacos】，不需要改动--------------------------------------------------------------------
+  cloud:
+    nacos:
+      #配置中心
+      config:
+        enabled: true
+        server-addr: https://en-test.uggame.com:443
+        #命名空间
+        namespace: ${spring.profiles.active}
+        username: nacos
+        password: nacos
+        file-extension: yml
+        # 额外加载的配置文件列表
+        extension-configs:
+          # 主配置
+          - dataId: application.yml
+            refresh: true
+        name: ${spring.application.name}
+
+      #服务注册和发现
+      discovery:
+        register-enabled: true
+        server-addr: https://en-test.uggame.com:443
+        #测试环境 命名空间
+        namespace: ${spring.profiles.active}
+        username: nacos
+        password: nacos
+
+#-----------------------------------------该部分文件内容【spring:cloud:nacos】，不需要改动--------------------------------------------------------------------
