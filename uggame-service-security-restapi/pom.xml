@@ -21,6 +21,12 @@
 
         <dependency>
             <groupId>com.dofun</groupId>
+            <artifactId>uggame-service-id-clientapi</artifactId>
+            <version>${uggame.framework.version.main}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dofun</groupId>
             <artifactId>uggame-framework-util</artifactId>
             <version>${uggame.framework.version.main}</version>
         </dependency>

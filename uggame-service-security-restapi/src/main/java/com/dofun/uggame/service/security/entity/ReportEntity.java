@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 @Table(name = "`zhw_security_report_facebook`")

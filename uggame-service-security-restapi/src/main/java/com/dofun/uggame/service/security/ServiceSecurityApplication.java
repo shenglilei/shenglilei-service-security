@@ -3,7 +3,6 @@ package com.dofun.uggame.service.security;
 
 import com.dofun.uggame.framework.common.utils.TimezoneUtil;
 import com.dofun.uggame.framework.core.annotation.EnableUGGameApplication;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 
 import static com.dofun.uggame.framework.common.Constants.SYSTEM_DEFAULT_CONFIG_TIMEZONE;

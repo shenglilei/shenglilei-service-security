@@ -2,8 +2,10 @@ package com.dofun.uggame.service.security.service.security.impl;
 
 import com.dofun.uggame.common.util.BeanMapperUtil;
 import com.dofun.uggame.common.util.RC4Util;
-import com.dofun.uggame.framework.core.id.IdUtil;
+import com.dofun.uggame.framework.common.response.WebApiResponse;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
+import com.dofun.uggame.service.id.clientapi.interfaces.IdInterface;
+import com.dofun.uggame.service.id.clientapi.pojo.response.IdResponseParam;
 import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
 import com.dofun.uggame.service.security.clientapi.pojo.request.ReportFacebookStartGameRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.ReportQuitFacebookAccountRequestParam;
@@ -34,7 +36,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
     private ReportMapper reportMapper;
 
     @Autowired
-    private IdUtil idUtil;
+    private IdInterface idInterface;
 
     @Value("${encryption.key}")
     private String encryptionKey;
@@ -45,7 +47,13 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         ReportEntity existReportEntity = reportMapper.selectOne(reportEntityForSelect);
         if (existReportEntity == null) {
             log.info("{},不存在,新增记录。", param.getOrderId());
-            ReportEntity reportEntityForInsert = ReportEntity.builder().id(idUtil.next()).build();
+            WebApiResponse<IdResponseParam> idResponseParamWebApiResponse = idInterface.next();
+            if (idResponseParamWebApiResponse.isSuccessAndHasContent()) {
+                log.info("id:{}", idResponseParamWebApiResponse.getData().getId());
+            } else {
+                log.error("idInterface.next 调用失败.");
+            }
+            ReportEntity reportEntityForInsert = ReportEntity.builder().id(idResponseParamWebApiResponse.getData().getId()).build();
             BeanMapperUtil.copyProperties(param, reportEntityForInsert);
             reportEntityForInsert.setUpdateTime(new Date());
             reportEntityForInsert.setCreateTime(new Date());

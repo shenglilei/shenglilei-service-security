@@ -6,9 +6,11 @@ import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RC4Util;
 import com.dofun.uggame.framework.common.error.impl.CommonError;
 import com.dofun.uggame.framework.common.exception.BusinessException;
-import com.dofun.uggame.framework.core.id.IdUtil;
+import com.dofun.uggame.framework.common.response.WebApiResponse;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
 import com.dofun.uggame.framework.redis.service.RedisService;
+import com.dofun.uggame.service.id.clientapi.interfaces.IdInterface;
+import com.dofun.uggame.service.id.clientapi.pojo.response.IdResponseParam;
 import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
 import com.dofun.uggame.service.security.clientapi.pojo.request.*;
 import com.dofun.uggame.service.security.clientapi.pojo.response.AccountLoginForGarenaChangePasswordResponseParam;
@@ -40,7 +42,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     @Autowired
     private AccountMapper accountMapper;
     @Autowired
-    private IdUtil idUtil;
+    private IdInterface idInterface;
     @Autowired
     private RedisService redisService;
     @Value("${httpsqs.ip}")
@@ -71,7 +73,13 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
         String myUsernameKey = usernameKey + param.getClientType() + ":" + "username:" + param.getUsername();
         String accessToken = redisService.get(myUsernameKey);
         if (accessToken == null) {
-            accessToken = DigestUtils.md5Hex(String.valueOf(idUtil.next()));
+            WebApiResponse<IdResponseParam> idResponseParamWebApiResponse = idInterface.next();
+            if (idResponseParamWebApiResponse.isSuccessAndHasContent()) {
+                log.info("id:{}", idResponseParamWebApiResponse.getData().getId());
+            } else {
+                log.error("idInterface.next 调用失败.");
+            }
+            accessToken = DigestUtils.md5Hex(String.valueOf(idResponseParamWebApiResponse.getData().getId()));
             String myTokenKey = tokenKey + accessToken;
             redisService.set(myUsernameKey, accessToken, ticketTime);
             redisService.set(myTokenKey, param, ticketTime);
@@ -109,7 +117,13 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
         AccountEntity existAccountEntity = accountMapper.selectOne(accountEntityForSelect);
         if (existAccountEntity == null) {
             log.info("{},不存在,新增记录。", param.getOrderId());
-            AccountEntity accountEntityForInsert = AccountEntity.builder().id(idUtil.next()).build();
+            WebApiResponse<IdResponseParam> idResponseParamWebApiResponse = idInterface.next();
+            if (idResponseParamWebApiResponse.isSuccessAndHasContent()) {
+                log.info("id:{}", idResponseParamWebApiResponse.getData().getId());
+            } else {
+                log.error("idInterface.next 调用失败.");
+            }
+            AccountEntity accountEntityForInsert = AccountEntity.builder().id(idResponseParamWebApiResponse.getData().getId()).build();
             BeanMapperUtil.copyProperties(param, accountEntityForInsert);
             accountEntityForInsert.setUpdateTime(new Date());
             accountEntityForInsert.setCreateTime(new Date());
