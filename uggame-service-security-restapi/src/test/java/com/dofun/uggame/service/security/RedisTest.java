@@ -37,7 +37,7 @@ public class RedisTest {
         AssertUtils.isTrue(redisService.get(key).equals(value), "数据不一致");
         redisService.delete(key);
         AssertUtils.isTrue(redisService.get(key) == null, "数据删除失败");
-        try (RedisLock lock = new RedisLock(redisService, RandomUtil.getMixed(16))) {
+        try (RedisLock ignored = new RedisLock(RandomUtil.getMixed(16))) {
             Thread.sleep(2000);
         }
     }

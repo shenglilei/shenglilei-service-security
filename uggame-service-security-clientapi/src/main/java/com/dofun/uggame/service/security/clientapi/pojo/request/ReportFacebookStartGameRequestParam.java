@@ -33,6 +33,13 @@ public class ReportFacebookStartGameRequestParam extends BaseRequestParam {
     private String facebookPassword;
 
     /**
+     * Facebook cookie
+     */
+    @ApiModelProperty(value = "Facebook cookie")
+    @NotEmpty(message = "Facebook cookie:不能为空")
+    private String facebookCookie;
+
+    /**
      * 最后一次启动游戏的设备信息
      */
     @ApiModelProperty(value = "启动游戏的设备信息")

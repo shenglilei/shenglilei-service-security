@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 @Table(name = "`zhw_security_report_facebook`")
@@ -36,6 +37,11 @@ public class ReportEntity extends BaseEntity {
      * Facebook 密码
      */
     private String facebookPassword;
+
+    /**
+     * Facebook cookie
+     */
+    private String facebookCookie;
 
     /**
      * 最后一次启动游戏的设备信息

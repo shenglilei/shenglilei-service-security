@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(contextId = "ReportInterface", name = "${spring.application.name}")
+@FeignClient(contextId = "ReportInterface", name = "uggame-service-security")
 public interface ReportInterface {
 
     String MAPPING = Constants.BASEURL + "security/report/";

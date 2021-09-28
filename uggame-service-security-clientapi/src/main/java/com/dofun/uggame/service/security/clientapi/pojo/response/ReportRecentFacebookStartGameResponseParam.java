@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,12 @@ public class ReportRecentFacebookStartGameResponseParam extends BaseResponsePara
          */
         @ApiModelProperty(value = "Facebook 密码")
         private String facebookPassword;
+
+        /**
+         * Facebook cookie
+         */
+        @ApiModelProperty(value = "Facebook cookie")
+        private String facebookCookie;
 
         /**
          * 最后一次启动游戏的设备信息
