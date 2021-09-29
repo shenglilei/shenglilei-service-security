@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(contextId = "ReportInterface", name = "uggame-service-security", path = "${server.servlet.context-path}")
 public interface ReportInterface {
 
-    String MAPPING = "security/report/";
+    String MAPPING = "/security/report/";
 
     @ApiOperation(value = "上报安全信息-facebook授权启动游戏")
     @PostMapping(value = MAPPING + "facebook/start-game")

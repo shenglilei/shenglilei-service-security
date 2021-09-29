@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(contextId = "AccountInterface", name = "uggame-service-security", path = "${server.servlet.context-path}")
 public interface AccountInterface {
 
-    String MAPPING = "security/account/";
+    String MAPPING = "/security/account/";
 
     @ApiOperation(value = "账号服务-登录")
     @PostMapping(value = MAPPING + "garena/password/change/login")
