@@ -5,7 +5,6 @@ import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RandomUtil;
 import com.dofun.uggame.framework.common.base.BaseRequestParam;
 import com.dofun.uggame.service.security.clientapi.enums.OrderStatusEnum;
-import com.dofun.uggame.service.security.clientapi.pojo.request.AccountReceiveGarenaChangePasswordRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChange2PHPRequestParam;
 import com.dofun.uggame.service.security.constants.HttPSQSConstants;
 import io.swagger.annotations.ApiModel;
