@@ -2,7 +2,6 @@ package com.dofun.uggame.service.security.clientapi.interfaces;
 
 import com.dofun.uggame.framework.common.base.BaseResponseParam;
 import com.dofun.uggame.framework.common.response.WebApiResponse;
-import com.dofun.uggame.service.security.clientapi.constants.Constants;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountLoginForGarenaChangePasswordRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountQueryGarenaChangePasswordListRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChangeRequestParam;
@@ -14,10 +13,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(contextId = "AccountInterface", name = "uggame-service-security")
+@FeignClient(contextId = "AccountInterface", name = "uggame-service-security", path = "${server.servlet.context-path}")
 public interface AccountInterface {
 
-    String MAPPING = Constants.BASEURL + "security/account/";
+    String MAPPING = "security/account/";
 
     @ApiOperation(value = "账号服务-登录")
     @PostMapping(value = MAPPING + "garena/password/change/login")

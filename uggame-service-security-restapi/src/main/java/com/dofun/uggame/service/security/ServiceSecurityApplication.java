@@ -5,7 +5,7 @@ import com.dofun.uggame.framework.common.utils.TimezoneUtil;
 import com.dofun.uggame.framework.core.annotation.EnableUGGameApplication;
 import org.springframework.boot.SpringApplication;
 
-import static com.dofun.uggame.framework.common.Constants.SYSTEM_DEFAULT_CONFIG_TIMEZONE;
+import static com.dofun.uggame.framework.common.constants.Constants.SYSTEM_DEFAULT_CONFIG_TIMEZONE;
 
 /**
  * 安全服务
