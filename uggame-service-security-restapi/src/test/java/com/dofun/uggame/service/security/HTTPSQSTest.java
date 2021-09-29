@@ -5,6 +5,7 @@ import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RandomUtil;
 import com.dofun.uggame.framework.common.base.BaseRequestParam;
 import com.dofun.uggame.service.security.clientapi.enums.OrderStatusEnum;
+import com.dofun.uggame.service.security.clientapi.pojo.request.AccountReceiveGarenaChangePasswordRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.AccountSubmitResultForGarenaPasswordChange2PHPRequestParam;
 import com.dofun.uggame.service.security.constants.HttPSQSConstants;
 import io.swagger.annotations.ApiModel;
@@ -27,7 +28,12 @@ public class HTTPSQSTest {
 //        Message message1 = HttpSQSUtil.get(ip, port, auth, topicName, Message.class);
 //        log.info("message after:{}", JSON.toJSONString(message1));
 //        send2php();
-        send2java();
+//        send2java();
+
+        AccountReceiveGarenaChangePasswordRequestParam param = HttpSQSUtil.get(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_JAVA_ORDER_NEED_CHANGE_GARENA_PASSWORD, AccountReceiveGarenaChangePasswordRequestParam.class);
+        if (param != null) {
+            log.info("开始处理HTTPSQS消息:{}", JSON.toJSONString(param));
+        }
     }
 
     private static void send2php() {
