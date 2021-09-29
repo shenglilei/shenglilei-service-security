@@ -10,17 +10,11 @@ spring:
 
   #-----------------------------------------该部分文件内容【spring:cloud:nacos】，不需要改动--------------------------------------------------------------------
   cloud:
-    sentinel:
-      eager: true
-      transport:
-        #10.0.65.79（需要在办公网内部使用，走VPN连接阿里云ECS）
-        dashboard: http://10.0.65.79:8080
     nacos:
       #配置中心
       config:
-        enabled: true
         #10.0.65.79（需要在办公网内部使用，走VPN连接阿里云ECS）
-        server-addr: http://10.0.65.79:8848
+        server-addr: 10.0.65.79:8848
         #命名空间
         namespace: ${spring.profiles.active}
         username: nacos
@@ -32,14 +26,5 @@ spring:
           - dataId: application.yml
             refresh: true
         name: ${spring.application.name}
-
-      #服务注册和发现
-      discovery:
-        register-enabled: true
-        server-addr: ${spring.cloud.nacos.config.server-addr}
-        #测试环境 命名空间
-        namespace: ${spring.profiles.active}
-        username: nacos
-        password: nacos
 
 #-----------------------------------------该部分文件内容【spring:cloud:nacos】，不需要改动--------------------------------------------------------------------
