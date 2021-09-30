@@ -99,12 +99,12 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     @Override
     public void checkAccessToken(String accessToken) {
         if (accessToken == null || accessToken.isEmpty()) {
-            throw new BusinessException(CommonError.PARAMETER_ERROR);
+            throw new BusinessException(CommonError.ILLEGAL_PARAMETER);
         }
         String myTokenKey = tokenKey + accessToken;
         AccountLoginForGarenaChangePasswordRequestParam param = redisService.getObject(myTokenKey, AccountLoginForGarenaChangePasswordRequestParam.class);
         if (param == null) {
-            throw new BusinessException(CommonError.UNAUTHORIZED);
+            throw new BusinessException(CommonError.UN_AUTHORIZED);
         }
         String myUsernameKey = usernameKey + param.getClientType() + ":" + "username:" + param.getUsername();
         redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
