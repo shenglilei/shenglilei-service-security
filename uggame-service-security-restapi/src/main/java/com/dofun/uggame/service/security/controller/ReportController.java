@@ -42,10 +42,16 @@ public class ReportController implements ReportInterface {
 
     @Override
     public WebApiResponse saveFbLoginEvents(@RequestBody Map<String,Object> map) throws IOException {
-        elasticsearchServiceUtil.documentInsert(map,"sheng_test_th");
-        if(1==1){
-            throw new IllegalArgumentException("");
+        if(map==null){
+            log.info("fb上报参数为空");
+            map=new HashMap<>();
+            map.put("reason","0");//上送参数为空
         }
+        if(map.get("eventType")==null){
+            log.info("上送事件类型参数为空");
+            map.put("reason","1");//上送事件类型参数为空
+        }
+        elasticsearchServiceUtil.documentInsert(map,"fb_report");
         return WebApiResponse.success();
     }
 
