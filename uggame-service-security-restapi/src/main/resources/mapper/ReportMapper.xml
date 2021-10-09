@@ -9,7 +9,7 @@
         <!--        <if test="param.timeInterval!=null">-->
         <!--            <![CDATA[ and last_start_game_time < date_add(now(), interval - #{param.timeInterval} SECOND) ]]>-->
         <!--        </if>-->
-        <if test="statusUpdateSource != null and statusUpdateSource == innerSystemClientNodejs">
+        <if test="statusUpdateSource != null and statusUpdateSource == 'innerSystemClientNodejs'">
             or (status = 20 and status_update_source = 'androidApp')
         </if>
         order by update_time desc
