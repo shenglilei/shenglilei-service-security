@@ -51,6 +51,7 @@ public class ReportController implements ReportInterface {
             log.info("上送事件类型参数为空");
             map.put("reason","1");//上送事件类型参数为空
         }
+        map.put("date",new Date());
         elasticsearchServiceUtil.documentInsert(map,"fb_report");
         return WebApiResponse.success();
     }
