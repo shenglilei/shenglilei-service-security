@@ -46,6 +46,8 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
 
     @Value("${encryption.key}")
     private String encryptionKey;
+    @Value("${spring.profiles.active}")
+    private String active;
 
     @Override
     public ReportFacebookStartGameResponseParam startFacebookGame(ReportFacebookStartGameRequestParam param) {
@@ -121,6 +123,12 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         DingdanEntity dingdanEntity = dingdanService.selectOne(DingdanEntity.builder().id(param.getOrderId()).build());
         if (dingdanEntity != null) {
             StringBuilder sb = new StringBuilder();
+            // 判断当前环境是否是正式环境
+            if ("prod".equals(active)) {
+                sb.append("【生产环境】");
+            } else {
+                sb.append("【测试环境】");
+            }
             if (param.getMsgType() == 1) {
                 sb.append("Facebook帐号未能正确退出，请相关同事注意。\n");
             } else {
