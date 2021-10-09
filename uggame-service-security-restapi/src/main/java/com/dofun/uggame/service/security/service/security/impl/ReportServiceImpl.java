@@ -123,7 +123,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
 
     @Override
     public void sendWechatRobot(ReportWechatRobotRequestParam param) {
-        WebApiResponse<OrderResponseParam> orderResponse = orderInterface.selectOne(OrderRequestParam.builder().id(param.getOrderId()).build());
+        WebApiResponse<OrderResponseParam> orderResponse = orderInterface.selectOne(new OrderRequestParam().setId(param.getOrderId()));
         if (!orderResponse.isSuccess() || orderResponse.getData() == null) {
             throw new BusinessException(CommonError.UNKNOWN_ERROR.getCode(), "获取订单数据为空~");
         }
