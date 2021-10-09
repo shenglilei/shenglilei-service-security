@@ -6,6 +6,7 @@ import com.dofun.uggame.service.security.clientapi.interfaces.ReportInterface;
 import com.dofun.uggame.service.security.clientapi.pojo.request.ReportFacebookStartGameRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.ReportQuitFacebookAccountRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.request.ReportRecentFacebookStartGameRequestParam;
+import com.dofun.uggame.service.security.clientapi.pojo.request.ReportWechatRobotRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.ReportFacebookStartGameResponseParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.ReportRecentFacebookStartGameResponseParam;
 import com.dofun.uggame.service.security.elasticsearch.ElasticsearchServiceUtil;
@@ -41,18 +42,18 @@ public class ReportController implements ReportInterface {
     }
 
     @Override
-    public WebApiResponse saveFbLoginEvents(@RequestBody Map<String,Object> map) throws IOException {
-        if(map==null){
+    public WebApiResponse saveFbLoginEvents(@RequestBody Map<String, Object> map) throws IOException {
+        if (map == null) {
             log.info("fb上报参数为空");
-            map=new HashMap<>();
-            map.put("reason","0");//上送参数为空
+            map = new HashMap<>();
+            map.put("reason", "0");//上送参数为空
         }
-        if(map.get("eventType")==null){
+        if (map.get("eventType") == null) {
             log.info("上送事件类型参数为空");
-            map.put("reason","1");//上送事件类型参数为空
+            map.put("reason", "1");//上送事件类型参数为空
         }
-        map.put("date",new Date());
-        elasticsearchServiceUtil.documentInsert(map,"fb_report");
+        map.put("date", new Date());
+        elasticsearchServiceUtil.documentInsert(map, "fb_report");
         return WebApiResponse.success();
     }
 
@@ -68,6 +69,13 @@ public class ReportController implements ReportInterface {
             throw new IllegalArgumentException("状态不正确:[10、20]");
         }
         reportService.quitFacebookAccount(param);
+        return WebApiResponse.success(BaseResponseParam.empty());
+    }
+
+    @Override
+    public WebApiResponse<BaseResponseParam> sendWechatRobot(ReportWechatRobotRequestParam param) {
+        // 根据orderId查询数据
+        reportService.sendWechatRobot(param);
         return WebApiResponse.success(BaseResponseParam.empty());
     }
 }
