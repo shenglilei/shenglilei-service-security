@@ -11,12 +11,13 @@ import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
 import com.dofun.uggame.service.security.clientapi.pojo.request.*;
 import com.dofun.uggame.service.security.clientapi.pojo.response.ReportFacebookStartGameResponseParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.ReportRecentFacebookStartGameResponseParam;
-import com.dofun.uggame.service.security.entity.DingdanEntity;
 import com.dofun.uggame.service.security.entity.ReportEntity;
 import com.dofun.uggame.service.security.mapper.ReportMapper;
-import com.dofun.uggame.service.security.service.security.DingdanService;
 import com.dofun.uggame.service.security.service.security.ReportService;
-import com.dofun.uggame.service.security.service.security.WechatService;
+import com.dofun.uggame.service.security.service.wechat.WechatService;
+import com.dofun.uggame.service.tradecenter.clientapi.interfaces.OrderInterface;
+import com.dofun.uggame.service.tradecenter.clientapi.pojo.request.OrderRequestParam;
+import com.dofun.uggame.service.tradecenter.clientapi.pojo.response.OrderResponseParam;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,9 +41,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
     @Autowired
     private IdInterface idInterface;
     @Autowired
-    private DingdanService dingdanService;
-    @Autowired
     private WechatService wechatService;
+    @Autowired
+    private OrderInterface orderInterface;
 
     @Value("${encryption.key}")
     private String encryptionKey;
@@ -120,32 +121,32 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
 
     @Override
     public void sendWechatRobot(ReportWechatRobotRequestParam param) {
-        DingdanEntity dingdanEntity = dingdanService.selectOne(DingdanEntity.builder().id(param.getOrderId()).build());
-        if (dingdanEntity != null) {
-            StringBuilder sb = new StringBuilder();
-            // 判断当前环境是否是正式环境
-            if ("prod".equals(active)) {
-                sb.append("【生产环境】");
-            } else {
-                sb.append("【测试环境】");
-            }
-            if (param.getMsgType() == 1) {
-                sb.append("Facebook帐号未能正确退出，请相关同事注意。\n");
-            } else {
-                sb.append("Facebook帐号未能正确登录，请相关同事注意。\n");
-            }
-            sb.append(">订单ID：<font color=\"comment\">").append(param.getOrderId()).append("</font>\n");
-            sb.append(">订单编号：<font color=\"comment\">").append(dingdanEntity.getOrderNo()).append("</font>\n");
-            sb.append(">账号ID：<font color=\"comment\">").append(dingdanEntity.getHid()).append("</font>\n");
-            sb.append(">租客ID：<font color=\"comment\">").append(dingdanEntity.getUid()).append("</font>\n");
-            sb.append(">游戏名称：<font color=\"comment\">").append(dingdanEntity.getGameName()).append("</font>\n");
-            if (StringUtils.isNoneEmpty(param.getContent())) {
-                sb.append(param.getContent()).append("\n");
-            }
-            sb.append("@所有人");
-            WechatRobotMarkdownRequestParam markdownRequestParam = new WechatRobotMarkdownRequestParam();
-            markdownRequestParam.setContent(sb.toString());
-            wechatService.sendWechatRobotMarkdownMsg(markdownRequestParam);
+        WebApiResponse<OrderResponseParam> orderResponse = orderInterface.selectOne(OrderRequestParam.builder().id(param.getOrderId()).build());
+        if (!orderResponse.isSuccess() || orderResponse.getData() == null) return;
+        OrderResponseParam orderParam = orderResponse.getData();
+        StringBuilder sb = new StringBuilder();
+        // 判断当前环境是否是正式环境
+        if ("prod".equals(active)) {
+            sb.append("【生产环境】");
+        } else {
+            sb.append("【测试环境】");
         }
+        if (param.getMsgType() == 1) {
+            sb.append("Facebook帐号未能正确退出，请相关同事注意。\n");
+        } else {
+            sb.append("Facebook帐号未能正确登录，请相关同事注意。\n");
+        }
+        sb.append(">订单ID：<font color=\"comment\">").append(param.getOrderId()).append("</font>\n");
+        sb.append(">订单编号：<font color=\"comment\">").append(orderParam.getOrderNo()).append("</font>\n");
+        sb.append(">账号ID：<font color=\"comment\">").append(orderParam.getHid()).append("</font>\n");
+        sb.append(">租客ID：<font color=\"comment\">").append(orderParam.getUid()).append("</font>\n");
+        sb.append(">游戏名称：<font color=\"comment\">").append(orderParam.getGameName()).append("</font>\n");
+        if (StringUtils.isNoneEmpty(param.getContent())) {
+            sb.append(param.getContent()).append("\n");
+        }
+        sb.append("@所有人");
+        WechatRobotMarkdownRequestParam markdownRequestParam = new WechatRobotMarkdownRequestParam();
+        markdownRequestParam.setContent(sb.toString());
+        wechatService.sendWechatRobotMarkdownMsg(markdownRequestParam);
     }
 }

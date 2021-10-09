@@ -1,4 +1,4 @@
-package com.dofun.uggame.service.security.service.security;
+package com.dofun.uggame.service.security.service.wechat;
 
 import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotMarkdownRequestParam;
 

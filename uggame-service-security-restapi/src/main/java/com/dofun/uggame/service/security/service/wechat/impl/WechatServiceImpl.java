@@ -1,10 +1,10 @@
-package com.dofun.uggame.service.security.service.security.impl;
+package com.dofun.uggame.service.security.service.wechat.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dofun.uggame.framework.common.error.impl.CommonError;
 import com.dofun.uggame.framework.common.exception.BusinessException;
 import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotMarkdownRequestParam;
-import com.dofun.uggame.service.security.service.security.WechatService;
+import com.dofun.uggame.service.security.service.wechat.WechatService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
