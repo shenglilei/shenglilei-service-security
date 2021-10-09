@@ -57,5 +57,8 @@ public class ReportRecentFacebookStartGameResponseParam extends BaseResponsePara
          */
         @ApiModelProperty(value = "启动游戏时间")
         private Date lastStartGameTime;
+
+        @ApiModelProperty(value = "状态更新来源(ReqEndPointEnum)[innerSystemClientNodejs, androidApp]")
+        private String statusUpdateSource;
     }
 }

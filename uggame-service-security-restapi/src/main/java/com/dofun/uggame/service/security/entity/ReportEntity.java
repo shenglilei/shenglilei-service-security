@@ -58,6 +58,11 @@ public class ReportEntity extends BaseEntity {
     private Integer status;
 
     /**
+     * 状态更新来源(ReqEndPointEnum)
+     */
+    private String statusUpdateSource;
+
+    /**
      * 创建时间
      */
     private Date createTime;

@@ -16,4 +16,7 @@ public class ReportRecentFacebookStartGameRequestParam extends BasePageRequestPa
     @ApiModelProperty(value = "时间区间，单位：秒", hidden = true)
     private Long timeInterval = 60L;
 
+    @ApiModelProperty(value = "状态更新来源(ReqEndPointEnum),暂时由客户端传入[innerSystemClientNodejs, androidApp]")
+    private String statusUpdateSource;
+
 }

@@ -2,6 +2,7 @@ package com.dofun.uggame.service.security.service.security.impl;
 
 import com.dofun.uggame.common.util.BeanMapperUtil;
 import com.dofun.uggame.common.util.RC4Util;
+import com.dofun.uggame.framework.common.enums.ReqEndPointEnum;
 import com.dofun.uggame.framework.common.response.WebApiResponse;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
 import com.dofun.uggame.service.id.clientapi.interfaces.IdInterface;
@@ -17,6 +18,7 @@ import com.dofun.uggame.service.security.mapper.ReportMapper;
 import com.dofun.uggame.service.security.service.security.ReportService;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
             reportEntityForInsert.setUpdateTime(new Date());
             reportEntityForInsert.setCreateTime(new Date());
             reportEntityForInsert.setStatus(StatusEnum.WAIT.getCode());
+            reportEntityForInsert.setStatusUpdateSource(StringUtils.isEmpty(param.getStatusUpdateSource()) ? ReqEndPointEnum.ANDROID_APP.getName() : param.getStatusUpdateSource());
             int insertResult = reportMapper.insert(reportEntityForInsert);
             log.info("insertResult:{}", insertResult);
             return ReportFacebookStartGameResponseParam.builder().id(reportEntityForInsert.getId()).build();
@@ -102,6 +105,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
             if (Objects.equals(existReportEntity.getStatus(), StatusEnum.WAIT.getCode()) || Objects.equals(existReportEntity.getStatus(), StatusEnum.FAILED.getCode())) {
                 existReportEntity.setStatus(param.getStatus());
                 existReportEntity.setUpdateTime(new Date());
+                existReportEntity.setStatusUpdateSource(param.getStatusUpdateSource());
                 int updateResult = reportMapper.updateByPrimaryKey(existReportEntity);
                 log.info("updateResult:{}", updateResult);
             }

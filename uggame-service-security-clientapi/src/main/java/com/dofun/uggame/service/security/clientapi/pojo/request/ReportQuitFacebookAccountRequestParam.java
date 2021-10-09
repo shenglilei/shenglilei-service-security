@@ -22,4 +22,7 @@ public class ReportQuitFacebookAccountRequestParam extends BaseRequestParam {
     @NotNull(message = "状态:不能为空")
     @Range(message = "状态：10=成功处理；20=处理失败", min = 10, max = 20)
     private Integer status = StatusEnum.SUCCESS.getCode();
+
+    @ApiModelProperty(value = "状态更新来源(ReqEndPointEnum),暂时由客户端传入[innerSystemClientNodejs, androidApp]")
+    private String statusUpdateSource;
 }

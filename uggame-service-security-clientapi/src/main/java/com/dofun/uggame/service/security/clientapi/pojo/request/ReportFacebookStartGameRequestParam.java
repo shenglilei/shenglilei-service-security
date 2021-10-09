@@ -53,4 +53,7 @@ public class ReportFacebookStartGameRequestParam extends BaseRequestParam {
     @NotNull(message = "启动游戏时间:不能为空")
     private Date lastStartGameTime = new Date();
 
+    @ApiModelProperty(value = "状态更新来源(ReqEndPointEnum),暂时由客户端传入[innerSystemClientNodejs, androidApp]")
+    private String statusUpdateSource;
+
 }
