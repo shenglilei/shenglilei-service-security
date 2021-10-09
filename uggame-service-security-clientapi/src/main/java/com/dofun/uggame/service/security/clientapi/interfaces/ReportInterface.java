@@ -13,6 +13,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
+import java.util.Map;
+
 @FeignClient(contextId = "ReportInterface", name = "uggame-service-security", path = "${server.servlet.context-path}")
 public interface ReportInterface {
 
@@ -21,6 +24,11 @@ public interface ReportInterface {
     @ApiOperation(value = "上报安全信息-facebook授权启动游戏")
     @PostMapping(value = MAPPING + "facebook/start-game")
     WebApiResponse<ReportFacebookStartGameResponseParam> startFacebookGame(@RequestBody @Validated ReportFacebookStartGameRequestParam param);
+
+    @ApiOperation(value = "保存fb授权登录游戏的各个节点(包括 fb登录,注销)状态 ES")
+    @PostMapping(value = MAPPING + "facebook/login-events")
+    WebApiResponse saveFbLoginEvents(@RequestBody Map<String,Object> map) throws IOException;
+
 
 
     @ApiOperation(value = "查询安全信息-最近通过facebook授权启动游戏的记录")

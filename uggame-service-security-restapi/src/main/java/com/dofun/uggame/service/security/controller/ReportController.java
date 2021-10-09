@@ -8,6 +8,7 @@ import com.dofun.uggame.service.security.clientapi.pojo.request.ReportQuitFacebo
 import com.dofun.uggame.service.security.clientapi.pojo.request.ReportRecentFacebookStartGameRequestParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.ReportFacebookStartGameResponseParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.ReportRecentFacebookStartGameResponseParam;
+import com.dofun.uggame.service.security.elasticsearch.ElasticsearchServiceUtil;
 import com.dofun.uggame.service.security.service.security.ReportService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Api(tags = "上报安全信息")
 @RestController
@@ -25,6 +29,8 @@ public class ReportController implements ReportInterface {
 
     @Resource
     private ReportService reportService;
+    @Resource
+    private ElasticsearchServiceUtil elasticsearchServiceUtil;
 
     @Override
     public WebApiResponse<ReportFacebookStartGameResponseParam> startFacebookGame(@RequestBody @Validated ReportFacebookStartGameRequestParam param) {
@@ -32,6 +38,15 @@ public class ReportController implements ReportInterface {
         param.setLastStartGameTime(new Date());
         ReportFacebookStartGameResponseParam responseParam = reportService.startFacebookGame(param);
         return WebApiResponse.success(responseParam);
+    }
+
+    @Override
+    public WebApiResponse saveFbLoginEvents(@RequestBody Map<String,Object> map) throws IOException {
+        elasticsearchServiceUtil.documentInsert(map,"sheng_test_th");
+        if(1==1){
+            throw new IllegalArgumentException("");
+        }
+        return WebApiResponse.success();
     }
 
     @Override
