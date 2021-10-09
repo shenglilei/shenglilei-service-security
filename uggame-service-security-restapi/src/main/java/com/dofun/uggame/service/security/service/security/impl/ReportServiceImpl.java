@@ -3,6 +3,8 @@ package com.dofun.uggame.service.security.service.security.impl;
 import com.dofun.uggame.common.util.BeanMapperUtil;
 import com.dofun.uggame.common.util.RC4Util;
 import com.dofun.uggame.framework.common.enums.ReqEndPointEnum;
+import com.dofun.uggame.framework.common.error.impl.CommonError;
+import com.dofun.uggame.framework.common.exception.BusinessException;
 import com.dofun.uggame.framework.common.response.WebApiResponse;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
 import com.dofun.uggame.service.id.clientapi.interfaces.IdInterface;
@@ -122,7 +124,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
     @Override
     public void sendWechatRobot(ReportWechatRobotRequestParam param) {
         WebApiResponse<OrderResponseParam> orderResponse = orderInterface.selectOne(OrderRequestParam.builder().id(param.getOrderId()).build());
-        if (!orderResponse.isSuccess() || orderResponse.getData() == null) return;
+        if (!orderResponse.isSuccess() || orderResponse.getData() == null) {
+            throw new BusinessException(CommonError.UNKNOWN_ERROR.getCode(), "获取订单数据为空~");
+        }
         OrderResponseParam orderParam = orderResponse.getData();
         StringBuilder sb = new StringBuilder();
         // 判断当前环境是否是正式环境
