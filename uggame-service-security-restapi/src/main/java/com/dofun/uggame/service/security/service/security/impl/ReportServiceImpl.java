@@ -112,13 +112,12 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         ReportEntity existReportEntity = reportMapper.selectByPrimaryKey(param.getId());
         if (existReportEntity != null) {
             //只有待处理以及处理失败的，才需要更新状态
-            if (Objects.equals(existReportEntity.getStatus(), StatusEnum.WAIT.getCode()) || Objects.equals(existReportEntity.getStatus(), StatusEnum.FAILED.getCode())) {
+            if (!Objects.equals(existReportEntity.getStatus(), StatusEnum.SUCCESS.getCode()))
                 existReportEntity.setStatus(param.getStatus());
-                existReportEntity.setUpdateTime(new Date());
-                existReportEntity.setStatusUpdateSource(param.getStatusUpdateSource());
-                int updateResult = reportMapper.updateByPrimaryKey(existReportEntity);
-                log.info("updateResult:{}", updateResult);
-            }
+            existReportEntity.setUpdateTime(new Date());
+            existReportEntity.setStatusUpdateSource(param.getStatusUpdateSource());
+            int updateResult = reportMapper.updateByPrimaryKey(existReportEntity);
+            log.info("updateResult:{}", updateResult);
         }
     }
 

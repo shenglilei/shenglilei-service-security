@@ -19,9 +19,11 @@ import com.dofun.uggame.service.security.constants.HttPSQSConstants;
 import com.dofun.uggame.service.security.entity.AccountEntity;
 import com.dofun.uggame.service.security.mapper.AccountMapper;
 import com.dofun.uggame.service.security.service.security.AccountService;
+import com.dofun.uggame.service.security.service.wechat.WechatService;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,12 +41,16 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
 
     private static final String usernameKey = "uggame:auth:token:garena:change:password:clientType:";
     private static final String tokenKey = "uggame:auth:token:garena:change:password:token:";
+    private static final String garenaLatestConnectTimeKey = "uggame:garena:latestConnectTime";
     @Autowired
     private AccountMapper accountMapper;
     @Autowired
     private IdInterface idInterface;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private WechatService wechatService;
+
     @Value("${httpsqs.ip}")
     private String ip;
     @Value("${httpsqs.port}")
@@ -61,6 +67,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     private String authPassword;
     @Value("${client.auth.ticketTime}")
     private Long ticketTime;
+    @Value("${spring.profiles.active}")
+    private String active;
 
     @Override
     public AccountLoginForGarenaChangePasswordResponseParam loginForChangePasswordGarena(AccountLoginForGarenaChangePasswordRequestParam param) {
@@ -215,6 +223,25 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             items.add(item);
         });
         responseParam.setItem(items);
+        redisService.set(garenaLatestConnectTimeKey, System.currentTimeMillis());
         return responseParam;
     }
+
+    @Override
+    public void checkGarena() {
+        if ("prod".equals(active)) { // 非生产环境暂不处理
+            String latestTime = redisService.get(garenaLatestConnectTimeKey);
+            if (StringUtils.isEmpty(latestTime) || System.currentTimeMillis() - Long.parseLong(latestTime) > 20000) {
+                WechatRobotMarkdownRequestParam param = new WechatRobotMarkdownRequestParam();
+                // 判断当前环境是否是正式环境
+                if ("prod".equals(active)) {
+                    param.setContent("【生产环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
+                } else {
+                    param.setContent("【测试环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
+                }
+                wechatService.sendWechatRobotTextMsg(param);
+            }
+        }
+    }
+
 }
