@@ -17,4 +17,6 @@ public interface ReportService extends BaseService<ReportEntity> {
     void quitFacebookAccount(ReportQuitFacebookAccountRequestParam param);
 
     void sendWechatRobot(ReportWechatRobotRequestParam param);
+
+    void sendReportStatisticsToWechatRobotMsg();
 }

@@ -1,6 +1,7 @@
 package com.dofun.uggame.service.security.service.security.impl;
 
 import com.dofun.uggame.common.util.BeanMapperUtil;
+import com.dofun.uggame.common.util.DateUtils;
 import com.dofun.uggame.common.util.RC4Util;
 import com.dofun.uggame.framework.common.enums.ReqEndPointEnum;
 import com.dofun.uggame.framework.common.error.impl.CommonError;
@@ -148,6 +149,45 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         if (StringUtils.isNoneEmpty(param.getContent())) {
             sb.append(param.getContent()).append("\n");
         }
+        sb.append("@所有人");
+        WechatRobotMarkdownRequestParam markdownRequestParam = new WechatRobotMarkdownRequestParam();
+        markdownRequestParam.setContent(sb.toString());
+        wechatService.sendWechatRobotMarkdownMsg(markdownRequestParam);
+    }
+
+    @Override
+    public void sendReportStatisticsToWechatRobotMsg() {
+        List<ReportEntity> list = reportMapper.selectReportStatistics(DateUtils.getCurrentDateStartTime(new Date()), new Date());
+
+        Integer reportNum = list.size(); // 上报总量
+        Integer appSuccessNum = 0; // APP成功数量
+        Integer appButNodeNum = 0; // APP失败但Node成功数量
+        Integer appAndNodeNum = 0; // APP失败且Node失败数量
+
+        for (ReportEntity reportEntity : list) {
+            if (ReqEndPointEnum.ANDROID_APP.equals(reportEntity.getStatusUpdateSource()) && reportEntity.getStatus() == 10) {
+                appSuccessNum++;
+            }
+            if (ReqEndPointEnum.INNER_SYSTEM_CLIENT_NODEJS.equals(reportEntity.getStatusUpdateSource()) && reportEntity.getStatus() == 10) {
+                appButNodeNum++;
+            }
+            if (ReqEndPointEnum.INNER_SYSTEM_CLIENT_NODEJS.equals(reportEntity.getStatusUpdateSource()) && reportEntity.getStatus() == 20) {
+                appAndNodeNum++;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        // 判断当前环境是否是正式环境
+        if ("prod".equals(active)) {
+            sb.append("【生产环境】截止到当前时间今日上报统计");
+        } else {
+            sb.append("【测试环境】截止到当前时间今日上报统计");
+        }
+        sb.append("\n");
+        sb.append(">上报总量：<font color=\"comment\">").append(reportNum).append("</font>\n");
+        sb.append(">APP成功数量：<font color=\"comment\">").append(appSuccessNum).append("</font>\n");
+        sb.append(">APP失败但Node成功数量：<font color=\"comment\">").append(appButNodeNum).append("</font>\n");
+        sb.append(">APP失败且Node失败数量：<font color=\"comment\">").append(appAndNodeNum).append("</font>\n");
         sb.append("@所有人");
         WechatRobotMarkdownRequestParam markdownRequestParam = new WechatRobotMarkdownRequestParam();
         markdownRequestParam.setContent(sb.toString());

@@ -14,4 +14,10 @@
         </if>
         order by update_time desc
     </select>
+
+    <select id="selectReportStatistics" resultType="com.dofun.uggame.service.security.entity.ReportEntity">
+        SELECT *
+        FROM zhw_security_report_facebook
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
+    </select>
 </mapper>

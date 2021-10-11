@@ -12,4 +12,6 @@ public interface WechatService {
 
     void sendWechatRobotMarkdownMsg(WechatRobotMarkdownRequestParam param);
 
+    void sendWechatRobotTextMsg(WechatRobotMarkdownRequestParam param);
+
 }
