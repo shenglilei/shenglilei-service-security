@@ -162,6 +162,15 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             AccountEntity existAccountEntity = accountMapper.selectOne(accountEntityForSelect);
             if (existAccountEntity == null) {
                 log.info("{},不存在。", param.getOrderId());
+                // 改密失败发送企业微信机器人推送
+                WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
+                // 判断当前环境是否是正式环境
+                if ("prod".equals(active)) {
+                    wechatRobotParam.setContent("【生产环境】Garena改密失败，orderId不存在于数据库，入参：" + param);
+                } else {
+                    wechatRobotParam.setContent("【测试环境】Garena改密失败，orderId不存在于数据库，入参：" + param);
+                }
+                wechatService.sendWechatRobotTextMsg(wechatRobotParam);
                 throw new IllegalArgumentException("orderId不存在");
             }
             //不是待处理状态的就跳过
@@ -171,10 +180,28 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             }
             if (!existAccountEntity.getGarenaAccount().equals(param.getGarenaAccount())) {
                 log.info("账号信息不一致,数据库:{},入参:{},", existAccountEntity.getGarenaAccount(), param.getGarenaAccount());
+                // 改密失败发送企业微信机器人推送
+                WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
+                // 判断当前环境是否是正式环境
+                if ("prod".equals(active)) {
+                    wechatRobotParam.setContent("【生产环境】Garena改密失败，Garena账户不一致，入参：" + param);
+                } else {
+                    wechatRobotParam.setContent("【测试环境】Garena改密失败，Garena账户不一致，入参：" + param);
+                }
+                wechatService.sendWechatRobotTextMsg(wechatRobotParam);
                 throw new IllegalArgumentException("orderId不存在");
             }
             if (!existAccountEntity.getHaoId().equals(param.getHaoId())) {
                 log.info("货架Id不一致,数据库:{},入参:{},", existAccountEntity.getHaoId(), param.getHaoId());
+                // 改密失败发送企业微信机器人推送
+                WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
+                // 判断当前环境是否是正式环境
+                if ("prod".equals(active)) {
+                    wechatRobotParam.setContent("【生产环境】Garena改密失败，货架Id不一致，入参：" + param);
+                } else {
+                    wechatRobotParam.setContent("【测试环境】Garena改密失败，货架Id不一致，入参：" + param);
+                }
+                wechatService.sendWechatRobotTextMsg(wechatRobotParam);
                 throw new IllegalArgumentException("orderId不存在");
             }
             if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
@@ -191,6 +218,16 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             } else {
                 log.error("改密失败.");
             }
+        } else {
+            // 改密失败发送企业微信机器人推送
+            WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
+            // 判断当前环境是否是正式环境
+            if ("prod".equals(active)) {
+                wechatRobotParam.setContent("【生产环境】Garena改密失败，入参：" + param + "。请开发检查是否有误。");
+            } else {
+                wechatRobotParam.setContent("【测试环境】Garena改密失败，入参：" + param + "。请开发检查是否有误。");
+            }
+            wechatService.sendWechatRobotTextMsg(wechatRobotParam);
         }
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
             //明文转密文
