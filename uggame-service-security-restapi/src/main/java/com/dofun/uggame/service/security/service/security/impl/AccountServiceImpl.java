@@ -222,7 +222,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             //明文转密文
             param.setGarenaPassword(RC4Util.encrypt(param.getGarenaPassword(), encryptionKey));
             WebApiResponse<AccountSeatUpdateResponseParam> accountSeatUpdate = accountSeatInterface.update(new AccountSeatUpdateRequestParam().setId(param.getHaoId()).setGarenaPassword(param.getGarenaPassword()));
-            if (accountSeatUpdate.isSuccess() && !(accountSeatUpdate.getData().getUpdateResult() > 0)) {
+            if (accountSeatUpdate.isFail() || !(accountSeatUpdate.getData().getUpdateResult() > 0)) {
                 // 改密失败发送企业微信机器人推送
                 WechatRobotRequestParam wechatRobotParam = new WechatRobotRequestParam();
                 wechatRobotParam.setContent(activeProfiles + "Garena改密无更新，入参：" + param + "。请开发检查是否有误。");
