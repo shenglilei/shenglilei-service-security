@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -100,8 +101,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
                 redisService.delete(myUsernameKey);
                 return loginForChangePasswordGarena(param);
             }
-            redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
-            redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
+            redisService.expire(myUsernameKey, ticketTime, TimeUnit.SECONDS);
+            redisService.expire(myTokenKey, ticketTime, TimeUnit.SECONDS);
         }
         return AccountLoginForGarenaChangePasswordResponseParam.builder().accessToken(accessToken).expireAt(new Date(System.currentTimeMillis() + ticketTime)).build();
     }
@@ -117,8 +118,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             throw new BusinessException(CommonError.UN_AUTHORIZED);
         }
         String myUsernameKey = usernameKey + param.getClientType() + ":" + "username:" + param.getUsername();
-        redisService.expireAt(myUsernameKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
-        redisService.expireAt(myTokenKey, new Date(System.currentTimeMillis() + (ticketTime * 1000)));
+        redisService.expire(myUsernameKey, ticketTime, TimeUnit.SECONDS);
+        redisService.expire(myTokenKey, ticketTime, TimeUnit.SECONDS);
     }
 
     @Override
