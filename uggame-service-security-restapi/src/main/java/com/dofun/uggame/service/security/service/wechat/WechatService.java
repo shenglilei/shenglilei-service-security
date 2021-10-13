@@ -1,6 +1,6 @@
 package com.dofun.uggame.service.security.service.wechat;
 
-import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotMarkdownRequestParam;
+import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotRequestParam;
 
 /**
  * Achin
@@ -10,8 +10,8 @@ import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotMarkd
  */
 public interface WechatService {
 
-    void sendWechatRobotMarkdownMsg(WechatRobotMarkdownRequestParam param);
+    void sendWechatRobotMarkdownMsg(WechatRobotRequestParam param);
 
-    void sendWechatRobotTextMsg(WechatRobotMarkdownRequestParam param);
+    void sendWechatRobotTextMsg(WechatRobotRequestParam param);
 
 }

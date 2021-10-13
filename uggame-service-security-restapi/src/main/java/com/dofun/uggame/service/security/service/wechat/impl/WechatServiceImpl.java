@@ -3,7 +3,7 @@ package com.dofun.uggame.service.security.service.wechat.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dofun.uggame.framework.common.error.impl.CommonError;
 import com.dofun.uggame.framework.common.exception.BusinessException;
-import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotMarkdownRequestParam;
+import com.dofun.uggame.service.security.clientapi.pojo.request.WechatRobotRequestParam;
 import com.dofun.uggame.service.security.service.wechat.WechatService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class WechatServiceImpl implements WechatService {
     private String wechatRobotKeySecurityReport;
 
     @Override
-    public void sendWechatRobotMarkdownMsg(WechatRobotMarkdownRequestParam param) {
+    public void sendWechatRobotMarkdownMsg(WechatRobotRequestParam param) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         JSONObject jsonObject = new JSONObject();
@@ -46,7 +46,7 @@ public class WechatServiceImpl implements WechatService {
     }
 
     @Override
-    public void sendWechatRobotTextMsg(WechatRobotMarkdownRequestParam param) {
+    public void sendWechatRobotTextMsg(WechatRobotRequestParam param) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
         JSONObject jsonObject = new JSONObject();

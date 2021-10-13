@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotNull;
 
 /**
- * WechatRobotMarkdownRequestParam
+ * WechatRobotRequestParam
  *
  * @author Achin
  * @since 2021-10-09
@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "")
 @Data
-public class WechatRobotMarkdownRequestParam extends BaseRequestParam {
+public class WechatRobotRequestParam extends BaseRequestParam {
 
     @ApiModelProperty(value = "消息内容，markdown内容，最长不超过4096个字节，必须是utf8编码", required = true)
     @NotNull(message = "消息内容:不能为空")

@@ -140,6 +140,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         } else {
             sb.append("Facebook帐号未能正确登录，请相关同事注意。\n");
         }
+        sb.append(">上报时间：<font color=\"comment\">").append(DateUtils.getDateNowTime()).append("</font>\n");
         sb.append(">订单ID：<font color=\"comment\">").append(param.getOrderId()).append("</font>\n");
         sb.append(">订单编号：<font color=\"comment\">").append(orderParam.getOrderNo()).append("</font>\n");
         sb.append(">账号ID：<font color=\"comment\">").append(orderParam.getHid()).append("</font>\n");
@@ -149,7 +150,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
             sb.append(param.getContent()).append("\n");
         }
         sb.append("@所有人");
-        WechatRobotMarkdownRequestParam markdownRequestParam = new WechatRobotMarkdownRequestParam();
+        WechatRobotRequestParam markdownRequestParam = new WechatRobotRequestParam();
         markdownRequestParam.setContent(sb.toString());
         wechatService.sendWechatRobotMarkdownMsg(markdownRequestParam);
     }
@@ -188,7 +189,7 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
         sb.append(">APP失败但Node成功数量：<font color=\"comment\">").append(appButNodeNum).append("</font>\n");
         sb.append(">APP失败且Node失败数量：<font color=\"comment\">").append(appAndNodeNum).append("</font>\n");
         sb.append("@所有人");
-        WechatRobotMarkdownRequestParam markdownRequestParam = new WechatRobotMarkdownRequestParam();
+        WechatRobotRequestParam markdownRequestParam = new WechatRobotRequestParam();
         markdownRequestParam.setContent(sb.toString());
         wechatService.sendWechatRobotMarkdownMsg(markdownRequestParam);
     }

@@ -1,21 +1,21 @@
 package com.dofun.uggame.service.security.service.security.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.dofun.uggame.common.util.BeanMapperUtil;
-import com.dofun.uggame.common.util.HttpSQSUtil;
 import com.dofun.uggame.common.util.RC4Util;
 import com.dofun.uggame.framework.common.error.impl.CommonError;
 import com.dofun.uggame.framework.common.exception.BusinessException;
 import com.dofun.uggame.framework.common.response.WebApiResponse;
 import com.dofun.uggame.framework.mysql.service.impl.BaseServiceImpl;
 import com.dofun.uggame.framework.redis.service.RedisService;
+import com.dofun.uggame.service.gamecenter.clientapi.interfaces.AccountSeatInterface;
+import com.dofun.uggame.service.gamecenter.clientapi.pojo.request.AccountSeatUpdateRequestParam;
+import com.dofun.uggame.service.gamecenter.clientapi.pojo.response.AccountSeatUpdateResponseParam;
 import com.dofun.uggame.service.id.clientapi.interfaces.IdInterface;
 import com.dofun.uggame.service.id.clientapi.pojo.response.IdResponseParam;
 import com.dofun.uggame.service.security.clientapi.enums.StatusEnum;
 import com.dofun.uggame.service.security.clientapi.pojo.request.*;
 import com.dofun.uggame.service.security.clientapi.pojo.response.AccountLoginForGarenaChangePasswordResponseParam;
 import com.dofun.uggame.service.security.clientapi.pojo.response.AccountQueryGarenaChangePasswordListResponseParam;
-import com.dofun.uggame.service.security.constants.HttPSQSConstants;
 import com.dofun.uggame.service.security.entity.AccountEntity;
 import com.dofun.uggame.service.security.mapper.AccountMapper;
 import com.dofun.uggame.service.security.service.security.AccountService;
@@ -50,6 +50,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     private RedisService redisService;
     @Autowired
     private WechatService wechatService;
+    @Autowired
+    private AccountSeatInterface accountSeatInterface;
 
     @Value("${httpsqs.ip}")
     private String ip;
@@ -151,6 +153,13 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
 
     @Override
     public void submitResultForGarenaPasswordChange(AccountSubmitResultForGarenaPasswordChangeRequestParam param) {
+        String activeProfiles = "";
+        // 判断当前环境是否是正式环境
+        if ("prod".equals(active)) {
+            activeProfiles = "【生产环境】";
+        } else {
+            activeProfiles = "【测试环境】";
+        }
         //只有待处理以及处理失败的，才需要更新状态
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode()) || Objects.equals(param.getStatus(), StatusEnum.FAILED.getCode())) {
             if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
@@ -163,13 +172,8 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             if (existAccountEntity == null) {
                 log.info("{},不存在。", param.getOrderId());
                 // 改密失败发送企业微信机器人推送
-                WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
-                // 判断当前环境是否是正式环境
-                if ("prod".equals(active)) {
-                    wechatRobotParam.setContent("【生产环境】Garena改密失败，orderId不存在于数据库，入参：" + param);
-                } else {
-                    wechatRobotParam.setContent("【测试环境】Garena改密失败，orderId不存在于数据库，入参：" + param);
-                }
+                WechatRobotRequestParam wechatRobotParam = new WechatRobotRequestParam();
+                wechatRobotParam.setContent(activeProfiles + "Garena改密失败，orderId不存在于数据库，入参：" + param);
                 wechatService.sendWechatRobotTextMsg(wechatRobotParam);
                 throw new IllegalArgumentException("orderId不存在");
             }
@@ -181,26 +185,16 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             if (!existAccountEntity.getGarenaAccount().equals(param.getGarenaAccount())) {
                 log.info("账号信息不一致,数据库:{},入参:{},", existAccountEntity.getGarenaAccount(), param.getGarenaAccount());
                 // 改密失败发送企业微信机器人推送
-                WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
-                // 判断当前环境是否是正式环境
-                if ("prod".equals(active)) {
-                    wechatRobotParam.setContent("【生产环境】Garena改密失败，Garena账户不一致，入参：" + param);
-                } else {
-                    wechatRobotParam.setContent("【测试环境】Garena改密失败，Garena账户不一致，入参：" + param);
-                }
+                WechatRobotRequestParam wechatRobotParam = new WechatRobotRequestParam();
+                wechatRobotParam.setContent(activeProfiles + "Garena改密失败，Garena账户不一致，入参：" + param);
                 wechatService.sendWechatRobotTextMsg(wechatRobotParam);
                 throw new IllegalArgumentException("orderId不存在");
             }
             if (!existAccountEntity.getHaoId().equals(param.getHaoId())) {
                 log.info("货架Id不一致,数据库:{},入参:{},", existAccountEntity.getHaoId(), param.getHaoId());
                 // 改密失败发送企业微信机器人推送
-                WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
-                // 判断当前环境是否是正式环境
-                if ("prod".equals(active)) {
-                    wechatRobotParam.setContent("【生产环境】Garena改密失败，货架Id不一致，入参：" + param);
-                } else {
-                    wechatRobotParam.setContent("【测试环境】Garena改密失败，货架Id不一致，入参：" + param);
-                }
+                WechatRobotRequestParam wechatRobotParam = new WechatRobotRequestParam();
+                wechatRobotParam.setContent(activeProfiles + "Garena改密失败，货架Id不一致，入参：" + param);
                 wechatService.sendWechatRobotTextMsg(wechatRobotParam);
                 throw new IllegalArgumentException("orderId不存在");
             }
@@ -220,27 +214,21 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             }
         } else {
             // 改密失败发送企业微信机器人推送
-            WechatRobotMarkdownRequestParam wechatRobotParam = new WechatRobotMarkdownRequestParam();
-            // 判断当前环境是否是正式环境
-            if ("prod".equals(active)) {
-                wechatRobotParam.setContent("【生产环境】Garena改密失败，入参：" + param + "。请开发检查是否有误。");
-            } else {
-                wechatRobotParam.setContent("【测试环境】Garena改密失败，入参：" + param + "。请开发检查是否有误。");
-            }
+            WechatRobotRequestParam wechatRobotParam = new WechatRobotRequestParam();
+            wechatRobotParam.setContent(activeProfiles + "Garena改密失败，入参：" + param + "。请开发检查是否有误。");
             wechatService.sendWechatRobotTextMsg(wechatRobotParam);
         }
         if (Objects.equals(param.getStatus(), StatusEnum.SUCCESS.getCode())) {
             //明文转密文
             param.setGarenaPassword(RC4Util.encrypt(param.getGarenaPassword(), encryptionKey));
-            sendHTTPSQSMessage(param);
+            WebApiResponse<AccountSeatUpdateResponseParam> accountSeatUpdate = accountSeatInterface.update(new AccountSeatUpdateRequestParam().setId(param.getHaoId()).setGarenaPassword(param.getGarenaPassword()));
+            if (accountSeatUpdate.isSuccess() && !(accountSeatUpdate.getData().getUpdateResult() > 0)) {
+                // 改密失败发送企业微信机器人推送
+                WechatRobotRequestParam wechatRobotParam = new WechatRobotRequestParam();
+                wechatRobotParam.setContent(activeProfiles + "Garena改密无更新，入参：" + param + "。请开发检查是否有误。");
+                wechatService.sendWechatRobotTextMsg(wechatRobotParam);
+            }
         }
-    }
-
-    private void sendHTTPSQSMessage(AccountSubmitResultForGarenaPasswordChangeRequestParam param) {
-        AccountSubmitResultForGarenaPasswordChange2PHPRequestParam phpRequestParam = new AccountSubmitResultForGarenaPasswordChange2PHPRequestParam();
-        BeanMapperUtil.copyProperties(param, phpRequestParam);
-        log.info("开始发送HTTPSQS消息:{}", JSON.toJSONString(phpRequestParam));
-        HttpSQSUtil.put(ip, port, auth, HttPSQSConstants.QUEUE_DEFINE_NOTIFY_PHP_GARENA_PASSWORD_CHANGE_SUCCESS, JSON.toJSONString(phpRequestParam));
     }
 
     @Override
@@ -266,18 +254,16 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
 
     @Override
     public void checkGarena() {
-        if ("prod".equals(active)) { // 非生产环境暂不处理
-            String latestTime = redisService.get(garenaLatestConnectTimeKey);
-            if (StringUtils.isEmpty(latestTime) || System.currentTimeMillis() - Long.parseLong(latestTime) > 20000) {
-                WechatRobotMarkdownRequestParam param = new WechatRobotMarkdownRequestParam();
-                // 判断当前环境是否是正式环境
-                if ("prod".equals(active)) {
-                    param.setContent("【生产环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
-                } else {
-                    param.setContent("【测试环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
-                }
-                wechatService.sendWechatRobotTextMsg(param);
+        String latestTime = redisService.get(garenaLatestConnectTimeKey);
+        if (StringUtils.isEmpty(latestTime) || System.currentTimeMillis() - Long.parseLong(latestTime) > 20000) {
+            WechatRobotRequestParam param = new WechatRobotRequestParam();
+            // 判断当前环境是否是正式环境
+            if ("prod".equals(active)) {
+                param.setContent("【生产环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
+            } else {
+                param.setContent("【测试环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
             }
+            wechatService.sendWechatRobotTextMsg(param);
         }
     }
 
