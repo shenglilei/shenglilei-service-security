@@ -255,7 +255,7 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
     @Override
     public void checkGarena() {
         String latestTime = redisService.get(garenaLatestConnectTimeKey);
-        if (StringUtils.isEmpty(latestTime) || System.currentTimeMillis() - Long.parseLong(latestTime) > 20000) {
+        if (StringUtils.isEmpty(latestTime) || System.currentTimeMillis() - Long.parseLong(latestTime) > 60000) {
             WechatRobotRequestParam param = new WechatRobotRequestParam();
             // 判断当前环境是否是正式环境
             if ("prod".equals(active)) {

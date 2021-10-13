@@ -18,7 +18,7 @@ public class GarenaCheckTask {
     /**
      * 每20秒检测Garena是否在正常工作
      */
-    @Scheduled(fixedDelay = 20000)
+    @Scheduled(fixedDelay = 60000)
     public void checkGarena() {
         accountService.checkGarena();
     }
