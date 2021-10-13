@@ -20,6 +20,9 @@ public class ReportWechatRobotRequestParam extends BaseRequestParam {
     @ApiModelProperty(value = "消息类型")
     private Integer msgType;
 
+    @ApiModelProperty(value = "标题")
+    private String title;
+
     @ApiModelProperty(value = "额外说明内容")
     private String content;
 }

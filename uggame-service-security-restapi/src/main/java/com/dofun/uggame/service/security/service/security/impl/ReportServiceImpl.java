@@ -136,9 +136,17 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportEntity, ReportMappe
             sb.append("【测试环境】");
         }
         if (param.getMsgType() == 1) {
-            sb.append("Facebook帐号未能正确退出，请相关同事注意。\n");
+            if (StringUtils.isEmpty(param.getTitle())) {
+                sb.append("Facebook帐号未能正确退出，请相关同事注意。\n");
+            } else {
+                sb.append(param.getTitle()).append("\n");
+            }
         } else {
-            sb.append("Facebook帐号未能正确登录，请相关同事注意。\n");
+            if (StringUtils.isEmpty(param.getTitle())) {
+                sb.append("Facebook帐号未能正确登录，请相关同事注意。\n");
+            } else {
+                sb.append(param.getTitle()).append("\n");
+            }
         }
         sb.append(">上报时间：<font color=\"comment\">").append(DateUtils.getDateNowTime()).append("</font>\n");
         sb.append(">订单ID：<font color=\"comment\">").append(param.getOrderId()).append("</font>\n");
