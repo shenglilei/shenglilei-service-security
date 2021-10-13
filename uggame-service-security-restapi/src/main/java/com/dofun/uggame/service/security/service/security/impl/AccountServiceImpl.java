@@ -260,9 +260,9 @@ public class AccountServiceImpl extends BaseServiceImpl<AccountEntity, AccountMa
             WechatRobotRequestParam param = new WechatRobotRequestParam();
             // 判断当前环境是否是正式环境
             if ("prod".equals(active)) {
-                param.setContent("【生产环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
+                param.setContent("【生产环境】Garena已超过1分钟未拉取改密数据，请相关同事注意。");
             } else {
-                param.setContent("【测试环境】Garena已超过20秒未拉取改密数据，请相关同事注意。");
+                param.setContent("【测试环境】Garena已超过1分钟未拉取改密数据，请相关同事注意。");
             }
             wechatService.sendWechatRobotTextMsg(param);
         }
