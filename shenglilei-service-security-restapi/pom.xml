@@ -15,38 +15,20 @@
 
         <dependency>
             <groupId>com.dofun</groupId>
-            <artifactId>uggame-service-security-clientapi</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <artifactId>shenglilei-service-security-clientapi</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
         <dependency>
             <groupId>com.dofun</groupId>
-            <artifactId>uggame-service-id-clientapi</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <artifactId>shenglilei-framework-util</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
         <dependency>
             <groupId>com.dofun</groupId>
-            <artifactId>uggame-service-tradecenter-clientapi</artifactId>
-            <version>${uggame.framework.version.main}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dofun</groupId>
-            <artifactId>uggame-service-gamecenter-clientapi</artifactId>
-            <version>${uggame.framework.version.main}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dofun</groupId>
-            <artifactId>uggame-framework-util</artifactId>
-            <version>${uggame.framework.version.main}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dofun</groupId>
-            <artifactId>uggame-framework-common</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <artifactId>shenglilei-framework-common</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
         <dependency>
@@ -57,21 +39,21 @@
 
         <dependency>
             <groupId>com.dofun</groupId>
-            <artifactId>uggame-framework-core</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <artifactId>shenglilei-framework-core</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
         <dependency>
             <groupId>com.dofun</groupId>
-            <artifactId>uggame-framework-mysql</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <artifactId>shenglilei-framework-mysql</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
 
         <dependency>
             <groupId>com.dofun</groupId>
-            <artifactId>uggame-framework-redis</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <artifactId>shenglilei-framework-redis</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
         <dependency>

@@ -15,12 +15,12 @@
         <dependency>
             <groupId>com.dofun</groupId>
             <artifactId>shenglilei-framework-common</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
         <dependency>
             <groupId>com.dofun</groupId>
             <artifactId>shenglilei-framework-core</artifactId>
-            <version>${uggame.framework.version.main}</version>
+            <version>${shenglilei.framework.version.main}</version>
         </dependency>
     </dependencies>
 </project>
