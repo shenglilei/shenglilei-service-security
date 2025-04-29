@@ -1,5 +1,6 @@
 package com.dofun.shenglilei.service.security.clientapi.interfaces;
 
+import com.dofun.shenglilei.framework.common.base.BasePageRequestParam;
 import com.dofun.shenglilei.framework.common.base.BasePageResponseParam;
 import com.dofun.shenglilei.framework.common.base.BaseRequestParam;
 import com.dofun.shenglilei.framework.common.response.WebApiResponse;
@@ -17,7 +18,7 @@ public interface TestInterface {
 
     @ApiOperation(value = "分页Test")
     @PostMapping(value = MAPPING + "page")
-    WebApiResponse<BasePageResponseParam<TestResponseParam>> page(@RequestBody @Validated BaseRequestParam baseRequestParam);
+    WebApiResponse<BasePageResponseParam<TestResponseParam>> page(@RequestBody @Validated BasePageRequestParam basePageRequestParam);
 
 
 }
