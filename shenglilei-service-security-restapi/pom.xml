@@ -27,6 +27,12 @@
 
         <dependency>
             <groupId>com.dofun</groupId>
+            <artifactId>shenglilei-framework-log</artifactId>
+            <version>${shenglilei.framework.version.main}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dofun</groupId>
             <artifactId>shenglilei-framework-common</artifactId>
             <version>${shenglilei.framework.version.main}</version>
         </dependency>
@@ -38,18 +44,19 @@
             <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
-        <dependency>
+      <dependency>
             <groupId>com.dofun</groupId>
             <artifactId>shenglilei-framework-mysql</artifactId>
             <version>${shenglilei.framework.version.main}</version>
         </dependency>
 
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.dofun</groupId>
             <artifactId>shenglilei-framework-redis</artifactId>
             <version>${shenglilei.framework.version.main}</version>
-        </dependency>
+        </dependency>-->
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -129,6 +136,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.main.version}</version>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
                 <executions>
                     <execution>
                         <id>package-all</id>
